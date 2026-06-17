@@ -10,8 +10,6 @@ import { AuthService } from '../core/auth.service';
 export class Shell {
   private readonly auth = inject(AuthService);
 
-  readonly user = this.auth.user;
-
   logout(): void {
     this.auth.logout();
   }

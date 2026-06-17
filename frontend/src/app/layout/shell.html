@@ -2,16 +2,9 @@
   <!-- ───────── Sidebar ───────── -->
   <aside class="w-64 shrink-0 bg-white border-r border-ums-outline-variant flex flex-col">
     <!-- Marca -->
-    <div class="flex items-center gap-3 px-5 h-[72px] border-b border-ums-outline-variant">
-      <div class="h-9 w-9 rounded bg-ums-primary flex items-center justify-center shrink-0">
-        <svg class="h-5 w-5 text-ums-on-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </div>
-      <div class="leading-tight">
-        <p class="text-sm font-bold text-ums-primary">UMS Industrial</p>
-        <p class="text-[10px] uppercase tracking-wider text-ums-on-surface-variant">Portal de Certificación</p>
-      </div>
+    <div class="flex flex-col justify-center px-5 h-[72px] border-b border-ums-outline-variant">
+      <img src="logo-ums.png" alt="UMS" class="h-7 w-auto object-contain self-start" />
+      <p class="text-[10px] uppercase tracking-wider text-ums-on-surface-variant mt-1">Portal de Certificación</p>
     </div>
 
     <!-- Navegación -->
@@ -55,25 +48,7 @@
     </nav>
 
     <!-- Pie -->
-    <div class="p-3 space-y-1">
-      <button
-        type="button"
-        title="Disponible próximamente"
-        class="w-full flex items-center justify-center gap-2 rounded bg-ums-secondary px-3 py-2.5 text-sm font-semibold text-ums-on-secondary hover:bg-ums-secondary-container transition">
-        <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        Descargar Informes
-      </button>
-
-      <span class="flex items-center gap-3 rounded px-3 py-2 text-sm font-medium text-ums-outline cursor-not-allowed select-none" title="Disponible próximamente">
-        <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        Soporte
-      </span>
-
+    <div class="p-3">
       <button
         type="button"
         (click)="logout()"
@@ -92,27 +67,17 @@
     <header class="h-[72px] shrink-0 bg-white border-b border-ums-outline-variant flex items-center justify-between px-8 gap-6">
       <h2 class="text-lg font-bold text-ums-on-surface">Página Principal</h2>
 
-      <div class="flex items-center gap-4">
-        <!-- Buscador (decorativo por ahora) -->
-        <div class="relative hidden sm:block">
-          <svg class="h-4 w-4 text-ums-outline absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="7" />
-            <path d="m21 21-4.3-4.3" stroke-linecap="round" />
-          </svg>
-          <input
-            type="search"
-            disabled
-            placeholder="Buscar certificados…"
-            class="w-72 rounded-full bg-ums-surface-low border border-ums-outline-variant pl-9 pr-4 py-2 text-sm outline-none placeholder:text-ums-outline disabled:cursor-not-allowed" />
-        </div>
-
-        @if (user(); as u) {
-          <div
-            class="h-9 w-9 rounded-full bg-ums-primary-container flex items-center justify-center text-ums-on-primary text-sm font-semibold shrink-0"
-            [title]="u.name + ' · ' + u.email">
-            {{ u.name.charAt(0) }}
-          </div>
-        }
+      <!-- Buscador (decorativo por ahora) -->
+      <div class="relative hidden sm:block">
+        <svg class="h-4 w-4 text-ums-outline absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" stroke-linecap="round" />
+        </svg>
+        <input
+          type="search"
+          disabled
+          placeholder="Buscar certificados…"
+          class="w-72 rounded-full bg-ums-surface-low border border-ums-outline-variant pl-9 pr-4 py-2 text-sm outline-none placeholder:text-ums-outline disabled:cursor-not-allowed" />
       </div>
     </header>
 
