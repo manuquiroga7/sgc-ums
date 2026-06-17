@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/*
+ * Design System SGC-UMS — tokens derivados de la guía de Google Stitch
+ * ("Industrial Integrity System"). Paleta industrial azul + naranja seguridad.
+ */
+@theme {
+  /* Marca */
+  --color-ums-primary: #005387;
+  --color-ums-primary-container: #1b6ca8;
+  --color-ums-on-primary: #ffffff;
+  --color-ums-secondary: #e35205;
+  --color-ums-secondary-container: #fe651f;
+  --color-ums-on-secondary: #ffffff;
+
+  /* Superficies */
+  --color-ums-surface: #f8f9fa;
+  --color-ums-surface-container: #edeeef;
+  --color-ums-surface-low: #f3f4f5;
+  --color-ums-on-surface: #191c1d;
+  --color-ums-on-surface-variant: #414750;
+  --color-ums-outline: #717881;
+  --color-ums-outline-variant: #c0c7d1;
+
+  /* Semánticos */
+  --color-ums-success: #1f8a4c;
+  --color-ums-warning: #b88217;
+  --color-ums-danger: #ba1a1a;
+
+  /* Tipografía */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Radio (look "machined" 4px) */
+  --radius-ums: 0.25rem;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-ums-surface);
+  color: var(--color-ums-on-surface);
+}

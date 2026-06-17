@@ -1,0 +1,69 @@
+<div class="flex h-screen overflow-hidden bg-ums-surface">
+  <!-- Sidebar -->
+  <aside class="w-64 shrink-0 bg-white border-r border-ums-outline-variant flex flex-col">
+    <!-- Marca -->
+    <div class="flex items-center gap-3 px-5 h-16 border-b border-ums-outline-variant">
+      <div class="h-9 w-9 rounded bg-ums-primary flex items-center justify-center">
+        <span class="text-ums-on-primary font-bold">U</span>
+      </div>
+      <div class="leading-tight">
+        <p class="text-sm font-bold text-ums-primary">UMS Industrial</p>
+        <p class="text-[10px] uppercase tracking-wider text-ums-on-surface-variant">Portal de Certificación</p>
+      </div>
+    </div>
+
+    <!-- Navegación -->
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      @for (item of nav; track item.path) {
+        @if (item.enabled) {
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="bg-ums-primary text-ums-on-primary"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center rounded px-3 py-2 text-sm font-medium text-ums-on-surface-variant hover:bg-ums-surface-container transition">
+            {{ item.label }}
+          </a>
+        } @else {
+          <span
+            class="flex items-center justify-between rounded px-3 py-2 text-sm font-medium text-ums-outline cursor-not-allowed select-none">
+            {{ item.label }}
+            <span class="text-[9px] uppercase tracking-wide bg-ums-surface-container text-ums-on-surface-variant px-1.5 py-0.5 rounded">pronto</span>
+          </span>
+        }
+      }
+    </nav>
+
+    <!-- Pie / sesión -->
+    <div class="border-t border-ums-outline-variant p-3">
+      <button
+        (click)="logout()"
+        class="w-full flex items-center justify-center rounded bg-ums-secondary px-3 py-2 text-sm font-semibold text-ums-on-secondary hover:bg-ums-secondary-container transition">
+        Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenido -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Topbar -->
+    <header class="h-16 shrink-0 bg-white border-b border-ums-outline-variant flex items-center justify-between px-6">
+      <h2 class="text-lg font-bold text-ums-primary">Panel de Control</h2>
+      @if (user(); as u) {
+        <div class="flex items-center gap-3">
+          <div class="text-right leading-tight">
+            <p class="text-sm font-semibold text-ums-on-surface">{{ u.name }}</p>
+            <p class="text-xs text-ums-on-surface-variant">{{ u.email }}</p>
+          </div>
+          <div class="h-9 w-9 rounded-full bg-ums-primary-container flex items-center justify-center text-ums-on-primary text-sm font-semibold">
+            {{ u.name.charAt(0) }}
+          </div>
+        </div>
+      }
+    </header>
+
+    <!-- Outlet -->
+    <main class="flex-1 overflow-y-auto p-6">
+      <router-outlet />
+    </main>
+  </div>
+</div>

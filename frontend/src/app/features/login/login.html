@@ -1,0 +1,74 @@
+<div class="min-h-screen flex items-center justify-center bg-ums-surface px-4">
+  <div class="w-full max-w-md">
+    <!-- Marca -->
+    <div class="flex items-center gap-3 justify-center mb-8">
+      <div class="h-11 w-11 rounded bg-ums-primary flex items-center justify-center">
+        <span class="text-ums-on-primary font-bold text-lg">U</span>
+      </div>
+      <div class="leading-tight">
+        <p class="text-xl font-bold text-ums-primary tracking-tight">UMS Industrial</p>
+        <p class="text-xs uppercase tracking-wider text-ums-on-surface-variant">Portal de Certificación</p>
+      </div>
+    </div>
+
+    <!-- Tarjeta de login -->
+    <div class="bg-white border border-ums-outline-variant rounded shadow-sm">
+      <div class="h-1 bg-ums-primary rounded-t"></div>
+      <div class="p-8">
+        <h1 class="text-2xl font-bold text-ums-on-surface mb-1">Iniciar sesión</h1>
+        <p class="text-sm text-ums-on-surface-variant mb-6">
+          Accedé al sistema de gestión de certificaciones.
+        </p>
+
+        <form (ngSubmit)="submit()" #f="ngForm" class="space-y-4">
+          <div>
+            <label for="email" class="block text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">
+              Correo electrónico
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              [(ngModel)]="email"
+              required
+              autocomplete="username"
+              class="w-full rounded border border-ums-outline-variant px-3 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20"
+              placeholder="usuario@sgc-ums.com" />
+          </div>
+
+          <div>
+            <label for="password" class="block text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">
+              Contraseña
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              [(ngModel)]="password"
+              required
+              autocomplete="current-password"
+              class="w-full rounded border border-ums-outline-variant px-3 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20"
+              placeholder="••••••••" />
+          </div>
+
+          @if (error()) {
+            <div class="rounded border border-ums-danger/30 bg-ums-danger/5 px-3 py-2 text-sm text-ums-danger">
+              {{ error() }}
+            </div>
+          }
+
+          <button
+            type="submit"
+            [disabled]="loading() || f.invalid"
+            class="w-full rounded bg-ums-secondary px-4 py-2.5 text-sm font-semibold text-ums-on-secondary transition hover:bg-ums-secondary-container disabled:opacity-60 disabled:cursor-not-allowed">
+            {{ loading() ? 'Ingresando…' : 'Ingresar' }}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-ums-on-surface-variant mt-6">
+      SGC-UMS · Universal Monitoring Systems
+    </p>
+  </div>
+</div>

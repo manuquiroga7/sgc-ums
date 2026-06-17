@@ -1,0 +1,13 @@
+# --- Sistema operativo ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# --- Editores ---
+.idea/
+*.swp
+*.swo
+
+# Nota: backend/.gitignore y frontend/.gitignore manejan vendor/, node_modules/,
+# .env, dist/, etc. en cada subproyecto.
