@@ -1,80 +1,114 @@
-<div class="space-y-6">
-  <!-- Hero de bienvenida -->
-  <section class="rounded bg-ums-primary text-ums-on-primary p-8 relative overflow-hidden">
-    <p class="text-xs uppercase tracking-widest opacity-80 mb-2">Autoridad en Cumplimiento Marítimo</p>
-    <h1 class="text-3xl font-bold mb-2">
-      Bienvenido@if (user(); as u) {, {{ u.name }}}
-    </h1>
-    <p class="max-w-2xl text-sm opacity-90">
-      Portal central de UMS. El scaffold base está operativo: backend Laravel + base MySQL +
-      autenticación. Los módulos de certificación se irán habilitando en las próximas fases.
+<div class="max-w-6xl space-y-8">
+  <!-- ───────── Hero ───────── -->
+  <section class="rounded-lg bg-ums-primary-container text-white p-8 sm:p-10">
+    <p class="text-[11px] font-semibold uppercase tracking-[0.15em] text-white/70 mb-3">
+      Autoridad en Cumplimiento Marítimo
     </p>
+    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
+      Uruguayan Marine Safety
+    </h1>
+    <p class="max-w-2xl text-sm sm:text-[15px] leading-relaxed text-white/85 mb-7">
+      Bienvenido al portal central de UMS. Gestione el cumplimiento de su flota,
+      monitoree los ciclos de certificación y acceda a estándares de seguridad
+      industrial con precisión quirúrgica.
+    </p>
+
+    <div class="flex flex-wrap gap-3">
+      <button
+        type="button"
+        title="Disponible próximamente"
+        class="inline-flex items-center gap-2 rounded bg-ums-secondary px-5 py-2.5 text-sm font-semibold text-ums-on-secondary hover:bg-ums-secondary-container transition">
+        <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14m-7-7h14" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Nueva Certificación
+      </button>
+
+      <button
+        type="button"
+        title="Disponible próximamente"
+        class="inline-flex items-center gap-2 rounded border border-white/40 px-5 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition">
+        <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 5a2 2 0 0 1 2-2h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Archivo de Protocolos
+      </button>
+    </div>
   </section>
 
-  <!-- Estado del sistema -->
+  <!-- ───────── Acciones Rápidas ───────── -->
   <section>
-    <h2 class="text-sm font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-3">
-      Estado del Sistema
-    </h2>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <!-- API -->
-      <div class="bg-white border border-ums-outline-variant rounded p-5">
-        <div class="h-1 -mt-5 -mx-5 mb-4 rounded-t bg-ums-primary"></div>
-        <p class="text-xs uppercase tracking-wide text-ums-on-surface-variant">API Laravel</p>
-        <div class="flex items-center gap-2 mt-2">
-          @switch (apiOk()) {
-            @case (true) {
-              <span class="h-2.5 w-2.5 rounded-full bg-ums-success"></span>
-              <span class="text-lg font-bold text-ums-success">Conectada</span>
-            }
-            @case (false) {
-              <span class="h-2.5 w-2.5 rounded-full bg-ums-danger"></span>
-              <span class="text-lg font-bold text-ums-danger">Sin conexión</span>
-            }
-            @default {
-              <span class="h-2.5 w-2.5 rounded-full bg-ums-outline animate-pulse"></span>
-              <span class="text-lg font-bold text-ums-on-surface-variant">Verificando…</span>
-            }
-          }
-        </div>
-        @if (health(); as h) {
-          <p class="font-mono text-xs text-ums-on-surface-variant mt-2">{{ h.app }} · {{ h.time }}</p>
-        }
-      </div>
+    <div class="flex items-center gap-2 mb-4">
+      <svg class="h-4 w-4 text-ums-secondary" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M13 2 4.5 13.5H11l-1 8.5L19.5 10H13z" />
+      </svg>
+      <h2 class="text-base font-bold text-ums-primary">Acciones Rápidas</h2>
+    </div>
 
-      <!-- Auth -->
-      <div class="bg-white border border-ums-outline-variant rounded p-5">
-        <div class="h-1 -mt-5 -mx-5 mb-4 rounded-t bg-ums-secondary"></div>
-        <p class="text-xs uppercase tracking-wide text-ums-on-surface-variant">Sesión protegida</p>
-        <div class="flex items-center gap-2 mt-2">
-          @switch (meOk()) {
-            @case (true) {
-              <span class="h-2.5 w-2.5 rounded-full bg-ums-success"></span>
-              <span class="text-lg font-bold text-ums-success">Token válido</span>
-            }
-            @case (false) {
-              <span class="h-2.5 w-2.5 rounded-full bg-ums-danger"></span>
-              <span class="text-lg font-bold text-ums-danger">No autorizado</span>
-            }
-            @default {
-              <span class="h-2.5 w-2.5 rounded-full bg-ums-outline animate-pulse"></span>
-              <span class="text-lg font-bold text-ums-on-surface-variant">Verificando…</span>
-            }
-          }
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <!-- Nueva Certificación -->
+      <button
+        type="button"
+        title="Disponible próximamente"
+        class="group text-left bg-white border border-ums-outline-variant rounded-lg p-5 hover:border-ums-primary hover:shadow-sm transition cursor-not-allowed">
+        <div class="flex items-start justify-between">
+          <div class="h-11 w-11 rounded bg-ums-primary flex items-center justify-center text-white">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zm0 0v6h6M12 11v6m-3-3h6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <svg class="h-5 w-5 text-ums-outline group-hover:text-ums-primary transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
         </div>
-        <p class="text-xs text-ums-on-surface-variant mt-2">Ruta <span class="font-mono">/api/me</span> vía Sanctum</p>
-      </div>
+        <h3 class="mt-4 text-[15px] font-bold text-ums-on-surface">Nueva Certificación</h3>
+        <p class="mt-1 text-sm text-ums-on-surface-variant leading-snug">
+          Inicie un proceso formal de auditoría y certificación para embarcaciones.
+        </p>
+      </button>
 
-      <!-- Base de datos -->
-      <div class="bg-white border border-ums-outline-variant rounded p-5">
-        <div class="h-1 -mt-5 -mx-5 mb-4 rounded-t bg-ums-primary-container"></div>
-        <p class="text-xs uppercase tracking-wide text-ums-on-surface-variant">Base de datos</p>
-        <div class="flex items-center gap-2 mt-2">
-          <span class="h-2.5 w-2.5 rounded-full bg-ums-success"></span>
-          <span class="text-lg font-bold text-ums-success">sgc_ums</span>
+      <!-- Ver Historial -->
+      <button
+        type="button"
+        title="Disponible próximamente"
+        class="group text-left bg-white border border-ums-outline-variant rounded-lg p-5 hover:border-ums-primary hover:shadow-sm transition cursor-not-allowed">
+        <div class="flex items-start justify-between">
+          <div class="h-11 w-11 rounded bg-ums-primary flex items-center justify-center text-white">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 3-6.7L3 8m0-5v5h5M12 7v5l3 2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <svg class="h-5 w-5 text-ums-outline group-hover:text-ums-primary transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
         </div>
-        <p class="text-xs text-ums-on-surface-variant mt-2">MySQL · esquema marítimo migrado</p>
-      </div>
+        <h3 class="mt-4 text-[15px] font-bold text-ums-on-surface">Ver Historial</h3>
+        <p class="mt-1 text-sm text-ums-on-surface-variant leading-snug">
+          Acceda al registro completo de inspecciones pasadas y hallazgos.
+        </p>
+      </button>
+
+      <!-- Soporte Técnico -->
+      <button
+        type="button"
+        title="Disponible próximamente"
+        class="group text-left bg-white border border-ums-outline-variant rounded-lg p-5 hover:border-ums-primary hover:shadow-sm transition cursor-not-allowed">
+        <div class="flex items-start justify-between">
+          <div class="h-11 w-11 rounded bg-ums-primary flex items-center justify-center text-white">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <svg class="h-5 w-5 text-ums-outline group-hover:text-ums-primary transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <h3 class="mt-4 text-[15px] font-bold text-ums-on-surface">Soporte Técnico</h3>
+        <p class="mt-1 text-sm text-ums-on-surface-variant leading-snug">
+          Conecte con asesores técnicos y oficiales de cumplimiento de UMS.
+        </p>
+      </button>
     </div>
   </section>
 </div>
