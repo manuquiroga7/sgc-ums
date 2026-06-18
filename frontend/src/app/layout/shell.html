@@ -37,6 +37,18 @@
         Nueva Certificación
       </span>
 
+      <!-- Datos Maestros -->
+      <a
+        routerLink="/maestros"
+        routerLinkActive="bg-ums-primary! text-ums-on-primary! hover:bg-ums-primary"
+        class="flex items-center gap-3 rounded px-3 py-2 text-sm font-medium text-ums-on-surface-variant hover:bg-ums-surface-container transition">
+        <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <ellipse cx="12" cy="5" rx="8" ry="3" />
+          <path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Datos Maestros
+      </a>
+
       <!-- Ajustes (próximamente) -->
       <span class="flex items-center gap-3 rounded px-3 py-2 text-sm font-medium text-ums-outline cursor-not-allowed select-none" title="Disponible próximamente">
         <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -65,7 +77,7 @@
   <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Topbar -->
     <header class="h-[72px] shrink-0 bg-white border-b border-ums-outline-variant flex items-center justify-between px-8 gap-6">
-      <h2 class="text-lg font-bold text-ums-on-surface">Página Principal</h2>
+      <h2 class="text-lg font-bold text-ums-on-surface">{{ pageTitle() }}</h2>
 
       <!-- Buscador (decorativo por ahora) -->
       <div class="relative hidden sm:block">

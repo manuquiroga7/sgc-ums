@@ -1,0 +1,139 @@
+<div class="max-w-6xl">
+  <!-- Encabezado -->
+  <div class="flex items-start justify-between gap-4 mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-ums-on-surface">{{ title }}</h1>
+      @if (subtitle) {
+        <p class="text-sm text-ums-on-surface-variant mt-1">{{ subtitle }}</p>
+      }
+    </div>
+    <button
+      type="button"
+      (click)="openNew()"
+      class="shrink-0 inline-flex items-center gap-2 rounded bg-ums-secondary px-4 py-2.5 text-sm font-semibold text-ums-on-secondary hover:bg-ums-secondary-container transition">
+      <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14m-7-7h14" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      Nuevo
+    </button>
+  </div>
+
+  @if (error() && !showForm()) {
+    <div class="mb-4 rounded border border-ums-danger/30 bg-ums-danger/5 px-3 py-2 text-sm text-ums-danger">
+      {{ error() }}
+    </div>
+  }
+
+  <!-- Tabla -->
+  <div class="bg-white border border-ums-outline-variant rounded overflow-hidden">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="bg-ums-primary text-ums-on-primary text-left">
+          @for (f of listFields; track f.key) {
+            <th class="px-4 py-3 font-semibold text-xs uppercase tracking-wide">{{ f.label }}</th>
+          }
+          <th class="px-4 py-3 font-semibold text-xs uppercase tracking-wide text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+          <tr><td [attr.colspan]="listFields.length + 1" class="px-4 py-8 text-center text-ums-on-surface-variant">Cargando…</td></tr>
+        } @else if (rows().length === 0) {
+          <tr><td [attr.colspan]="listFields.length + 1" class="px-4 py-8 text-center text-ums-on-surface-variant">Sin registros. Creá el primero con “Nuevo”.</td></tr>
+        } @else {
+          @for (row of rows(); track row[pkField]; let even = $even) {
+            <tr [class.bg-ums-surface-low]="even" class="border-t border-ums-outline-variant">
+              @for (f of listFields; track f.key) {
+                <td class="px-4 py-3 align-top">
+                  @if (f.type === 'boolean') {
+                    @if (row[f.key]) {
+                      <span class="inline-flex items-center rounded-sm bg-ums-success/10 text-ums-success text-xs font-semibold px-2 py-0.5">Activo</span>
+                    } @else {
+                      <span class="inline-flex items-center rounded-sm bg-ums-outline/10 text-ums-on-surface-variant text-xs font-semibold px-2 py-0.5">Inactivo</span>
+                    }
+                  } @else {
+                    <span [class.font-mono]="f.key === 'numero_imo'" class="text-ums-on-surface">{{ row[f.key] || '—' }}</span>
+                  }
+                </td>
+              }
+              <td class="px-4 py-3 text-right whitespace-nowrap">
+                <button type="button" (click)="openEdit(row)" title="Editar"
+                  class="inline-flex items-center justify-center h-8 w-8 rounded text-ums-primary hover:bg-ums-primary/10 transition">
+                  <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+                <button type="button" (click)="remove(row)" title="Eliminar"
+                  class="inline-flex items-center justify-center h-8 w-8 rounded text-ums-danger hover:bg-ums-danger/10 transition">
+                  <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal de formulario -->
+@if (showForm()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40" (click)="closeForm()"></div>
+    <div class="relative w-full max-w-lg bg-white rounded-lg shadow-xl max-h-[90vh] overflow-y-auto">
+      <div class="h-1 bg-ums-primary rounded-t"></div>
+      <form (ngSubmit)="save()" #f="ngForm" class="p-6">
+        <h2 class="text-lg font-bold text-ums-on-surface mb-4">
+          {{ editingId() == null ? 'Nuevo registro' : 'Editar registro' }}
+        </h2>
+
+        <div class="space-y-4">
+          @for (field of fields; track field.key) {
+            <div>
+              @if (field.type === 'boolean') {
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input type="checkbox" [(ngModel)]="model[field.key]" [name]="field.key"
+                    class="h-4 w-4 rounded border-ums-outline-variant text-ums-primary" />
+                  <span class="text-sm font-medium text-ums-on-surface">{{ field.label }}</span>
+                </label>
+              } @else {
+                <label [for]="field.key" class="block text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">
+                  {{ field.label }}@if (field.required) {<span class="text-ums-danger"> *</span>}
+                </label>
+                @if (field.type === 'textarea') {
+                  <textarea [id]="field.key" [name]="field.key" [(ngModel)]="model[field.key]"
+                    [required]="!!field.required" [placeholder]="field.placeholder || ''" rows="3"
+                    class="w-full rounded border border-ums-outline-variant px-3 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20"></textarea>
+                } @else {
+                  <input [id]="field.key" [name]="field.key" [(ngModel)]="model[field.key]"
+                    [type]="field.type === 'number' ? 'number' : 'text'"
+                    [required]="!!field.required" [placeholder]="field.placeholder || ''"
+                    class="w-full rounded border border-ums-outline-variant px-3 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20" />
+                }
+              }
+            </div>
+          }
+        </div>
+
+        @if (error()) {
+          <div class="mt-4 rounded border border-ums-danger/30 bg-ums-danger/5 px-3 py-2 text-sm text-ums-danger">
+            {{ error() }}
+          </div>
+        }
+
+        <div class="flex justify-end gap-2 mt-6">
+          <button type="button" (click)="closeForm()"
+            class="rounded px-4 py-2 text-sm font-semibold text-ums-on-surface-variant hover:bg-ums-surface-container transition">
+            Cancelar
+          </button>
+          <button type="submit" [disabled]="saving() || f.invalid"
+            class="rounded bg-ums-primary px-4 py-2 text-sm font-semibold text-ums-on-primary hover:bg-ums-primary-container transition disabled:opacity-60 disabled:cursor-not-allowed">
+            {{ saving() ? 'Guardando…' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

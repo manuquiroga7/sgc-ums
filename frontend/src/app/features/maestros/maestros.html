@@ -1,0 +1,65 @@
+<div class="max-w-6xl">
+  <h1 class="text-2xl font-bold text-ums-on-surface mb-1">Datos Maestros</h1>
+  <p class="text-sm text-ums-on-surface-variant mb-6">
+    Administre la información base que alimenta los procesos de certificación.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <!-- Buques -->
+    <a routerLink="/maestros/buques"
+      class="group bg-white border border-ums-outline-variant rounded-lg p-5 hover:border-ums-primary hover:shadow-sm transition">
+      <div class="flex items-start justify-between">
+        <div class="h-11 w-11 rounded bg-ums-primary flex items-center justify-center text-white">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 18h18l-2 3H5zM12 3v9M5 12h14l-2 6H7zM9 6h6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <svg class="h-5 w-5 text-ums-outline group-hover:text-ums-primary transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h2 class="mt-4 text-[15px] font-bold text-ums-on-surface">Buques</h2>
+      <p class="mt-1 text-sm text-ums-on-surface-variant leading-snug">
+        Flota registrada: nombre, bandera, IMO, propietario.
+      </p>
+    </a>
+
+    <!-- Productos -->
+    <a routerLink="/maestros/productos"
+      class="group bg-white border border-ums-outline-variant rounded-lg p-5 hover:border-ums-primary hover:shadow-sm transition">
+      <div class="flex items-start justify-between">
+        <div class="h-11 w-11 rounded bg-ums-primary flex items-center justify-center text-white">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8l-9-5-9 5v8l9 5zM3.3 7.3 12 12l8.7-4.7M12 22V12" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <svg class="h-5 w-5 text-ums-outline group-hover:text-ums-primary transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h2 class="mt-4 text-[15px] font-bold text-ums-on-surface">Productos</h2>
+      <p class="mt-1 text-sm text-ums-on-surface-variant leading-snug">
+        Ítems de seguridad certificables y sus categorías.
+      </p>
+    </a>
+
+    <!-- Tipos de Certificado -->
+    <a routerLink="/maestros/tipos"
+      class="group bg-white border border-ums-outline-variant rounded-lg p-5 hover:border-ums-primary hover:shadow-sm transition">
+      <div class="flex items-start justify-between">
+        <div class="h-11 w-11 rounded bg-ums-primary flex items-center justify-center text-white">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zm0 0v6h6M9 13h6m-6 4h4" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <svg class="h-5 w-5 text-ums-outline group-hover:text-ums-primary transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h2 class="mt-4 text-[15px] font-bold text-ums-on-surface">Tipos de Certificado</h2>
+      <p class="mt-1 text-sm text-ums-on-surface-variant leading-snug">
+        Tipos de inspección, intervalos y normativa aplicable.
+      </p>
+    </a>
+  </div>
+</div>

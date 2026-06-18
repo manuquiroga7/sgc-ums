@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BuqueController;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\TipoCertificadoController;
 use Illuminate\Support\Facades\Route;
 
 // Healthcheck público (para verificar que la API responde)
@@ -17,4 +20,12 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Datos maestros (marítimo)
+    Route::apiResource('buques', BuqueController::class)
+        ->parameters(['buques' => 'buque']);
+    Route::apiResource('productos', ProductoController::class)
+        ->parameters(['productos' => 'producto']);
+    Route::apiResource('tipos-certificado', TipoCertificadoController::class)
+        ->parameters(['tipos-certificado' => 'tipoCertificado']);
 });

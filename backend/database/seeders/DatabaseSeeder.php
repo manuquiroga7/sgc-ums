@@ -24,5 +24,8 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]
         );
+
+        // Datos maestros de ejemplo (buques, productos, tipos de certificado).
+        $this->call(MaestrosSeeder::class);
     }
 }
