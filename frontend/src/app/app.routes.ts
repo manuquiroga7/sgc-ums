@@ -19,6 +19,11 @@ export const routes: Routes = [
         data: { title: 'Página Principal' },
       },
       {
+        path: 'nueva',
+        loadComponent: () => import('./features/certificacion/wizard').then((m) => m.Wizard),
+        data: { title: 'Nueva Certificación' },
+      },
+      {
         path: 'maestros',
         loadComponent: () => import('./features/maestros/maestros').then((m) => m.Maestros),
         data: { title: 'Datos Maestros' },

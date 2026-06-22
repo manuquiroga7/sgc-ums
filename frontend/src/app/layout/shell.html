@@ -29,13 +29,16 @@
         Historial
       </span>
 
-      <!-- Nueva Certificación (próximamente) -->
-      <span class="flex items-center gap-3 rounded px-3 py-2 text-sm font-medium text-ums-outline cursor-not-allowed select-none" title="Disponible próximamente">
+      <!-- Nueva Certificación -->
+      <a
+        routerLink="/nueva"
+        routerLinkActive="bg-ums-primary! text-ums-on-primary! hover:bg-ums-primary"
+        class="flex items-center gap-3 rounded px-3 py-2 text-sm font-medium text-ums-on-surface-variant hover:bg-ums-surface-container transition">
         <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zm0 0v6h6M12 11v6m-3-3h6" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         Nueva Certificación
-      </span>
+      </a>
 
       <!-- Datos Maestros -->
       <a

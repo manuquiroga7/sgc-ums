@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BuqueController;
+use App\Http\Controllers\CertificadoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\TipoCertificadoController;
 use Illuminate\Support\Facades\Route;
@@ -28,4 +29,9 @@ Route::middleware('auth:sanctum')->group(function () {
         ->parameters(['productos' => 'producto']);
     Route::apiResource('tipos-certificado', TipoCertificadoController::class)
         ->parameters(['tipos-certificado' => 'tipoCertificado']);
+
+    // Certificaciones (wizard): crear borrador + listado/detalle
+    Route::apiResource('certificados', CertificadoController::class)
+        ->only(['index', 'store', 'show'])
+        ->parameters(['certificados' => 'certificado']);
 });

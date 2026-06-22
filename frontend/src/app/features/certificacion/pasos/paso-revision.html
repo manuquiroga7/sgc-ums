@@ -1,0 +1,73 @@
+<p class="text-sm text-ums-on-surface-variant mb-4">
+  Revisá el resumen antes de guardar el borrador.
+</p>
+
+<div class="space-y-4 max-w-3xl">
+  <!-- Tipo + buque -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="bg-white border border-ums-outline-variant rounded-lg p-4">
+      <p class="text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant">Tipo de certificado</p>
+      <p class="text-sm font-bold text-ums-on-surface mt-1">{{ store.tipo()?.nombre }}</p>
+      <p class="text-xs text-ums-on-surface-variant">{{ store.tipo()?.normativa_aplicable }}</p>
+    </div>
+    <div class="bg-white border border-ums-outline-variant rounded-lg p-4">
+      <p class="text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant">Buque</p>
+      <p class="text-sm font-bold text-ums-on-surface mt-1">{{ store.buque()?.nombre }}</p>
+      <p class="text-xs text-ums-on-surface-variant">
+        {{ store.buque()?.bandera || '—' }} · IMO <span class="font-mono">{{ store.buque()?.numero_imo || '—' }}</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Ítems -->
+  <div class="bg-white border border-ums-outline-variant rounded-lg p-4">
+    <p class="text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-2">
+      Ítems ({{ store.items().length }})
+    </p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-left text-xs text-ums-on-surface-variant border-b border-ums-outline-variant">
+          <th class="py-1.5 pr-3">#</th>
+          <th class="py-1.5 pr-3">Producto</th>
+          <th class="py-1.5 pr-3">Fabricante</th>
+          <th class="py-1.5 pr-3">N° serie</th>
+          <th class="py-1.5 pr-3">Resultado</th>
+          <th class="py-1.5">Trabajos</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of store.items(); track $index) {
+          <tr class="border-b border-ums-outline-variant/60">
+            <td class="py-1.5 pr-3">{{ $index + 1 }}</td>
+            <td class="py-1.5 pr-3">{{ productoNombre(item.id_producto) }}</td>
+            <td class="py-1.5 pr-3">{{ item.campos['fabricante'] || '—' }}</td>
+            <td class="py-1.5 pr-3 font-mono">{{ item.campos['numero_serie'] || '—' }}</td>
+            <td class="py-1.5 pr-3">{{ item.campos['resultado'] || '—' }}</td>
+            <td class="py-1.5">{{ item.trabajos.join(', ') || '—' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Datos -->
+  <div class="bg-white border border-ums-outline-variant rounded-lg p-4">
+    <p class="text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-2">Datos del certificado</p>
+    <dl class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-sm">
+      <div><dt class="text-xs text-ums-on-surface-variant">N° certificado</dt><dd class="font-medium">{{ store.datos().numero_certificado || '—' }}</dd></div>
+      <div><dt class="text-xs text-ums-on-surface-variant">Inspector</dt><dd class="font-medium">{{ store.datos().inspector || '—' }}</dd></div>
+      <div><dt class="text-xs text-ums-on-surface-variant">Idioma PDF</dt><dd class="font-medium">{{ store.datos().idioma === 'es' ? 'Español' : 'Inglés' }}</dd></div>
+      <div><dt class="text-xs text-ums-on-surface-variant">Emisión</dt><dd class="font-medium">{{ store.datos().fecha_emision }}</dd></div>
+      <div><dt class="text-xs text-ums-on-surface-variant">Próximo servicio</dt><dd class="font-medium">{{ store.datos().fecha_proximo_servicio }}</dd></div>
+      <div class="col-span-2 sm:col-span-3"><dt class="text-xs text-ums-on-surface-variant">Recomendaciones</dt><dd class="font-medium">{{ store.datos().recomendaciones || '—' }}</dd></div>
+    </dl>
+  </div>
+
+  <!-- Texto legal -->
+  @if (textoLegal()) {
+    <div class="bg-ums-surface-low border border-ums-outline-variant rounded-lg p-4">
+      <p class="text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">Texto de certificación ({{ store.datos().idioma === 'es' ? 'ES' : 'EN' }})</p>
+      <p class="text-xs text-ums-on-surface-variant leading-relaxed">{{ textoLegal() }}</p>
+    </div>
+  }
+</div>

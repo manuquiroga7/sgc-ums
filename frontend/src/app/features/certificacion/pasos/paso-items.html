@@ -1,0 +1,147 @@
+<div class="flex items-center justify-between mb-4">
+  <p class="text-sm text-ums-on-surface-variant">
+    Cargá cada unidad inspeccionada. Total: <span class="font-semibold text-ums-on-surface">{{ store.items().length }}</span>
+  </p>
+</div>
+
+<div class="space-y-4">
+  @for (item of store.items(); track $index) {
+    <div class="bg-white border border-ums-outline-variant rounded-lg p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-sm font-bold text-ums-primary">Ítem {{ $index + 1 }}</h3>
+        @if (store.items().length > 1) {
+          <button type="button" (click)="store.removeItem($index)" title="Quitar ítem"
+            class="inline-flex items-center justify-center h-8 w-8 rounded text-ums-danger hover:bg-ums-danger/10 transition">
+            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        }
+      </div>
+
+      <!-- Campos dinámicos -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        @for (field of fields(); track field.key) {
+          <div [class.col-span-2]="field.type === 'producto_ref'">
+            <label class="block text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">
+              {{ field.label }}@if (field.required) {<span class="text-ums-danger"> *</span>}
+            </label>
+
+            @switch (field.type) {
+              @case ('producto_ref') {
+                <div class="flex gap-2">
+                  <select [(ngModel)]="item.id_producto"
+                    class="flex-1 rounded border border-ums-outline-variant px-2 py-2 text-sm bg-white outline-none focus:border-ums-primary">
+                    <option [ngValue]="null">— Sin producto —</option>
+                    @for (p of productos(); track p.id_producto) {
+                      <option [ngValue]="p.id_producto">{{ p.nombre }}</option>
+                    }
+                  </select>
+                  <button type="button" (click)="abrirNuevoProducto($index)" title="Nuevo producto"
+                    class="shrink-0 rounded border border-ums-outline-variant px-2 text-ums-primary hover:bg-ums-primary/10 transition">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 5v14m-7-7h14" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </button>
+                </div>
+              }
+              @case ('select') {
+                <select [(ngModel)]="item.campos[field.key]"
+                  class="w-full rounded border border-ums-outline-variant px-2 py-2 text-sm bg-white outline-none focus:border-ums-primary">
+                  <option value="">—</option>
+                  @for (opt of field.options; track opt.value) {
+                    <option [value]="opt.value">{{ opt.label }}</option>
+                  }
+                </select>
+              }
+              @case ('boolean') {
+                <select [(ngModel)]="item.campos[field.key]"
+                  class="w-full rounded border border-ums-outline-variant px-2 py-2 text-sm bg-white outline-none focus:border-ums-primary">
+                  <option value="">—</option>
+                  <option value="si">Sí</option>
+                  <option value="no">No</option>
+                </select>
+              }
+              @case ('number') {
+                <input type="number" [(ngModel)]="item.campos[field.key]"
+                  class="w-full rounded border border-ums-outline-variant px-2 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20" />
+              }
+              @case ('date') {
+                <input type="date" [(ngModel)]="item.campos[field.key]"
+                  class="w-full rounded border border-ums-outline-variant px-2 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20" />
+              }
+              @default {
+                <input type="text" [(ngModel)]="item.campos[field.key]"
+                  class="w-full rounded border border-ums-outline-variant px-2 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20" />
+              }
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Trabajos realizados -->
+      @if (trabajos().length) {
+        <div class="mt-4 pt-4 border-t border-ums-outline-variant">
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-2">Trabajos realizados</p>
+          <div class="flex flex-wrap gap-x-5 gap-y-2">
+            @for (tr of trabajos(); track tr.codigo) {
+              <label class="inline-flex items-start gap-2 cursor-pointer select-none text-sm">
+                <input type="checkbox" [checked]="isTrabajo(item, tr.codigo)" (change)="toggleTrabajo(item, tr.codigo)"
+                  class="mt-0.5 h-4 w-4 rounded border-ums-outline-variant text-ums-primary" />
+                <span class="text-ums-on-surface">{{ tr.label.es }}</span>
+              </label>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<button type="button" (click)="store.addItem()"
+  class="mt-4 inline-flex items-center gap-2 rounded border border-dashed border-ums-outline px-4 py-2.5 text-sm font-semibold text-ums-primary hover:bg-ums-primary/5 transition">
+  <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 5v14m-7-7h14" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+  Agregar ítem
+</button>
+
+<!-- Modal alta rápida de producto -->
+@if (showProductoForm()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40" (click)="showProductoForm.set(false)"></div>
+    <div class="relative w-full max-w-md bg-white rounded-lg shadow-xl">
+      <div class="h-1 bg-ums-primary rounded-t"></div>
+      <form (ngSubmit)="guardarProducto()" #f="ngForm" class="p-6">
+        <h2 class="text-lg font-bold text-ums-on-surface mb-4">Nuevo producto</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">Nombre <span class="text-ums-danger">*</span></label>
+            <input name="nombre" [(ngModel)]="nuevoProducto.nombre" required
+              class="w-full rounded border border-ums-outline-variant px-3 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">Categoría</label>
+              <input name="categoria" [(ngModel)]="nuevoProducto.categoria"
+                class="w-full rounded border border-ums-outline-variant px-3 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">Subtipo</label>
+              <input name="subtipo" [(ngModel)]="nuevoProducto.subtipo"
+                class="w-full rounded border border-ums-outline-variant px-3 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20" />
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-6">
+          <button type="button" (click)="showProductoForm.set(false)"
+            class="rounded px-4 py-2 text-sm font-semibold text-ums-on-surface-variant hover:bg-ums-surface-container transition">Cancelar</button>
+          <button type="submit" [disabled]="savingProducto() || f.invalid"
+            class="rounded bg-ums-primary px-4 py-2 text-sm font-semibold text-ums-on-primary hover:bg-ums-primary-container transition disabled:opacity-60 disabled:cursor-not-allowed">
+            {{ savingProducto() ? 'Guardando…' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

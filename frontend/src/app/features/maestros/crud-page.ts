@@ -140,10 +140,7 @@ export class CrudPage implements OnInit {
   }
 
   remove(row: Row): void {
-    const label = row['nombre'] ?? 'este registro';
-    if (!confirm(`¿Eliminar "${label}"? Esta acción no se puede deshacer.`)) {
-      return;
-    }
+    // Sin confirmación por ahora: eliminación directa.
     this.api.remove(this.resource, row[this.pkField] as number | string).subscribe({
       next: () => this.load(),
       error: () => this.error.set('No se pudo eliminar (puede tener registros asociados).'),

@@ -14,13 +14,15 @@ class Certificado extends Model
     protected $fillable = [
         'id_buque', 'id_tipo', 'numero_certificado', 'fecha_emision',
         'fecha_proximo_servicio', 'inspector', 'empresa_certificadora',
-        'total_unidades', 'recomendaciones', 'estado', 'archivo_doc',
+        'total_unidades', 'recomendaciones', 'estado', 'idioma',
+        'datos_extra', 'archivo_doc',
     ];
 
     protected $casts = [
         'fecha_emision' => 'date',
         'fecha_proximo_servicio' => 'date',
         'fecha_creacion' => 'datetime',
+        'datos_extra' => 'array',
     ];
 
     public function buque(): BelongsTo

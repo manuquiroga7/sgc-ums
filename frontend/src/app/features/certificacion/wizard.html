@@ -1,0 +1,98 @@
+@if (savedOk()) {
+  <!-- Pantalla de éxito -->
+  <div class="max-w-xl mx-auto text-center py-16">
+    <div class="h-14 w-14 rounded-full bg-ums-success/10 text-ums-success flex items-center justify-center mx-auto">
+      <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="m5 12 5 5 9-11" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+    <h1 class="text-2xl font-bold text-ums-on-surface mt-4">Certificado guardado en borrador</h1>
+    <p class="text-sm text-ums-on-surface-variant mt-1">
+      {{ savedNumero() ? 'Certificado ' + savedNumero() : 'El certificado' }} se guardó correctamente.
+    </p>
+    <div class="flex items-center justify-center gap-3 mt-6">
+      <a routerLink="/"
+        class="rounded px-4 py-2.5 text-sm font-semibold text-ums-on-surface-variant hover:bg-ums-surface-container transition">
+        Volver al inicio
+      </a>
+      <button type="button" (click)="cargarOtra()"
+        class="rounded bg-ums-secondary px-4 py-2.5 text-sm font-semibold text-ums-on-secondary hover:bg-ums-secondary-container transition">
+        Cargar otra certificación
+      </button>
+    </div>
+  </div>
+} @else {
+  <div class="max-w-5xl">
+    <!-- Stepper -->
+    <div class="flex items-center mb-2">
+      @for (s of store.steps; track $index; let last = $last) {
+        <button type="button" (click)="store.goTo($index)" [disabled]="$index > store.maxStep()"
+          class="flex items-center gap-2 disabled:cursor-not-allowed">
+          <span class="h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition"
+            [class.bg-ums-primary]="$index === store.step()"
+            [class.text-ums-on-primary]="$index === store.step()"
+            [class.border-ums-primary]="$index <= store.step()"
+            [class.text-ums-primary]="$index < store.step()"
+            [class.border-ums-outline-variant]="$index > store.step()"
+            [class.text-ums-outline]="$index > store.step()">
+            @if ($index < store.step()) {
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5 9-11" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            } @else {
+              {{ $index + 1 }}
+            }
+          </span>
+          <span class="text-sm font-medium hidden sm:inline"
+            [class.text-ums-on-surface]="$index === store.step()"
+            [class.text-ums-on-surface-variant]="$index !== store.step()">{{ s }}</span>
+        </button>
+        @if (!last) {
+          <div class="flex-1 h-0.5 mx-2" [class.bg-ums-primary]="$index < store.step()" [class.bg-ums-outline-variant]="$index >= store.step()"></div>
+        }
+      }
+    </div>
+
+    <!-- Título del paso -->
+    <h1 class="text-2xl font-bold text-ums-on-surface mt-4 mb-1">
+      Paso {{ store.step() + 1 }} de {{ store.steps.length }} · {{ store.steps[store.step()] }}
+    </h1>
+
+    <div class="mt-5">
+      @switch (store.step()) {
+        @case (0) { <app-paso-tipo /> }
+        @case (1) { <app-paso-buque /> }
+        @case (2) { <app-paso-items /> }
+        @case (3) { <app-paso-datos /> }
+        @case (4) { <app-paso-revision /> }
+      }
+    </div>
+
+    @if (store.error()) {
+      <div class="mt-4 rounded border border-ums-danger/30 bg-ums-danger/5 px-3 py-2 text-sm text-ums-danger">
+        {{ store.error() }}
+      </div>
+    }
+
+    <!-- Navegación -->
+    <div class="flex items-center justify-between mt-8 pt-4 border-t border-ums-outline-variant">
+      <button type="button" (click)="store.prev()" [disabled]="store.step() === 0"
+        class="inline-flex items-center gap-2 rounded px-4 py-2.5 text-sm font-semibold text-ums-on-surface-variant hover:bg-ums-surface-container transition disabled:opacity-40 disabled:cursor-not-allowed">
+        <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m6-6-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        Atrás
+      </button>
+
+      @if (store.step() < store.steps.length - 1) {
+        <button type="button" (click)="store.next()" [disabled]="!store.canProceed()"
+          class="inline-flex items-center gap-2 rounded bg-ums-primary px-5 py-2.5 text-sm font-semibold text-ums-on-primary hover:bg-ums-primary-container transition disabled:opacity-50 disabled:cursor-not-allowed">
+          Siguiente
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+      } @else {
+        <button type="button" (click)="guardar()" [disabled]="store.saving()"
+          class="inline-flex items-center gap-2 rounded bg-ums-secondary px-5 py-2.5 text-sm font-semibold text-ums-on-secondary hover:bg-ums-secondary-container transition disabled:opacity-60 disabled:cursor-not-allowed">
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          {{ store.saving() ? 'Guardando…' : 'Guardar borrador' }}
+        </button>
+      }
+    </div>
+  </div>
+}
