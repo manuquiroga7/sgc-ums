@@ -28,6 +28,8 @@ export class CrudPage implements OnInit {
   @Input({ required: true }) resource!: string;
   @Input({ required: true }) pkField!: string;
   @Input({ required: true }) fields!: CrudField[];
+  /** 'table' (por defecto) o 'cards' (bloques con modal de detalle). */
+  @Input() layout: 'table' | 'cards' = 'table';
 
   readonly rows = signal<Row[]>([]);
   readonly loading = signal(false);
@@ -37,6 +39,9 @@ export class CrudPage implements OnInit {
   readonly showForm = signal(false);
   readonly editingId = signal<number | string | null>(null);
   model: Row = {};
+
+  /** Fila seleccionada para el modal de detalle (modo cards). */
+  readonly detailRow = signal<Row | null>(null);
 
   ngOnInit(): void {
     this.load();
@@ -79,6 +84,30 @@ export class CrudPage implements OnInit {
   closeForm(): void {
     this.showForm.set(false);
     this.error.set(null);
+  }
+
+  openDetail(row: Row): void {
+    this.detailRow.set(row);
+  }
+
+  closeDetail(): void {
+    this.detailRow.set(null);
+  }
+
+  /** Editar desde el modal de detalle. */
+  editFromDetail(): void {
+    const row = this.detailRow();
+    if (!row) return;
+    this.detailRow.set(null);
+    this.openEdit(row);
+  }
+
+  /** Eliminar desde el modal de detalle. */
+  removeFromDetail(): void {
+    const row = this.detailRow();
+    if (!row) return;
+    this.detailRow.set(null);
+    this.remove(row);
   }
 
   save(): void {

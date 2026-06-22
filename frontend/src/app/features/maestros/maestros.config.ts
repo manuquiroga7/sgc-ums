@@ -6,6 +6,7 @@ export interface MaestroConfig {
   resource: string;
   pkField: string;
   fields: CrudField[];
+  layout?: 'table' | 'cards';
 }
 
 export const BUQUES_CONFIG: MaestroConfig = {
@@ -43,6 +44,7 @@ export const TIPOS_CONFIG: MaestroConfig = {
   subtitle: 'Tipos de inspección, su intervalo y normativa aplicable.',
   resource: 'tipos-certificado',
   pkField: 'id_tipo',
+  layout: 'cards',
   fields: [
     { key: 'nombre', label: 'Nombre', type: 'text', required: true, placeholder: 'ej. Inspección anual de equipos' },
     { key: 'intervalo_meses', label: 'Intervalo (meses)', type: 'number', placeholder: 'ej. 12' },

@@ -24,6 +24,7 @@
     </div>
   }
 
+  @if (layout === 'table') {
   <!-- Tabla -->
   <div class="bg-white border border-ums-outline-variant rounded overflow-hidden">
     <table class="w-full text-sm">
@@ -76,6 +77,38 @@
       </tbody>
     </table>
   </div>
+  } @else {
+  <!-- Bloques (cards) -->
+  @if (loading()) {
+    <p class="text-sm text-ums-on-surface-variant py-8 text-center">Cargando…</p>
+  } @else if (rows().length === 0) {
+    <div class="bg-white border border-ums-outline-variant rounded p-8 text-center text-ums-on-surface-variant">
+      Sin registros. Creá el primero con “Nuevo”.
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (row of rows(); track row[pkField]) {
+        <button type="button" (click)="openDetail(row)"
+          class="group text-left bg-white border border-ums-outline-variant rounded-lg p-5 hover:border-ums-primary hover:shadow-sm transition">
+          <div class="flex items-start justify-between gap-3">
+            <div class="h-10 w-10 rounded bg-ums-primary/10 text-ums-primary flex items-center justify-center shrink-0">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zm0 0v6h6M9 13h6m-6 4h4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            @if (row['intervalo_meses']) {
+              <span class="text-[10px] font-semibold uppercase tracking-wide bg-ums-surface-container text-ums-on-surface-variant px-2 py-0.5 rounded">{{ row['intervalo_meses'] }} meses</span>
+            }
+          </div>
+          <h3 class="mt-3 text-[15px] font-bold text-ums-on-surface group-hover:text-ums-primary transition">{{ row['nombre'] }}</h3>
+          @if (row['normativa_aplicable']) {
+            <p class="mt-1 text-xs text-ums-on-surface-variant">{{ row['normativa_aplicable'] }}</p>
+          }
+        </button>
+      }
+    </div>
+  }
+  }
 </div>
 
 <!-- Modal de formulario -->
@@ -134,6 +167,55 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+}
+
+<!-- Modal de detalle (modo cards) -->
+@if (detailRow(); as row) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40" (click)="closeDetail()"></div>
+    <div class="relative w-full max-w-lg bg-white rounded-lg shadow-xl max-h-[90vh] overflow-y-auto">
+      <div class="h-1 bg-ums-primary rounded-t"></div>
+      <div class="p-6">
+        <div class="flex items-start justify-between gap-4 mb-5">
+          <h2 class="text-lg font-bold text-ums-on-surface">{{ row['nombre'] }}</h2>
+          <button type="button" (click)="closeDetail()" title="Cerrar"
+            class="shrink-0 text-ums-outline hover:text-ums-on-surface transition">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 6l12 12M18 6 6 18" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <dl class="space-y-3">
+          @for (field of fields; track field.key) {
+            @if (field.key !== 'nombre') {
+              <div>
+                <dt class="text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant">{{ field.label }}</dt>
+                <dd class="text-sm text-ums-on-surface mt-0.5 whitespace-pre-wrap">
+                  @if (field.type === 'boolean') {
+                    {{ row[field.key] ? 'Sí' : 'No' }}
+                  } @else {
+                    {{ row[field.key] || '—' }}
+                  }
+                </dd>
+              </div>
+            }
+          }
+        </dl>
+
+        <div class="flex justify-end gap-2 mt-6">
+          <button type="button" (click)="removeFromDetail()"
+            class="rounded px-4 py-2 text-sm font-semibold text-ums-danger hover:bg-ums-danger/10 transition">
+            Eliminar
+          </button>
+          <button type="button" (click)="editFromDetail()"
+            class="rounded bg-ums-primary px-4 py-2 text-sm font-semibold text-ums-on-primary hover:bg-ums-primary-container transition">
+            Editar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 }
