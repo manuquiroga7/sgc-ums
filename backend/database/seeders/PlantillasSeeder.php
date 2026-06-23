@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Producto;
 use App\Models\TipoCertificado;
 use Illuminate\Database\Seeder;
 
@@ -9,6 +10,16 @@ class PlantillasSeeder extends Seeder
 {
     public function run(): void
     {
+        // Productos identificados como "Traje de Bombero" (categoría = atributo identificatorio).
+        $productosBombero = [
+            ['nombre' => 'Traje de bombero FIRE BUDDY', 'categoria' => 'Traje de Bombero', 'subtipo' => 'Completo'],
+            ['nombre' => 'Traje de bombero HAIZHOU', 'categoria' => 'Traje de Bombero', 'subtipo' => 'Completo'],
+            ['nombre' => 'Traje de bombero genérico', 'categoria' => 'Traje de Bombero', 'subtipo' => 'Completo'],
+        ];
+        foreach ($productosBombero as $p) {
+            Producto::firstOrCreate(['nombre' => $p['nombre']], $p);
+        }
+
         // ───── Traje de Bombero ─────
         $bombero = [
             'titulo' => [
@@ -17,7 +28,7 @@ class PlantillasSeeder extends Seeder
             ],
             'intervalo_meses' => 12,
             'item_fields' => [
-                ['key' => 'producto', 'label' => 'Producto / Tipo', 'type' => 'producto_ref'],
+                ['key' => 'producto', 'label' => 'Producto / Tipo', 'type' => 'producto_ref', 'categoria' => 'Traje de Bombero'],
                 ['key' => 'fabricante', 'label' => 'Fabricante / Make', 'type' => 'text'],
                 ['key' => 'modelo', 'label' => 'Modelo / Model', 'type' => 'text'],
                 ['key' => 'numero_serie', 'label' => 'N° de serie / Serial No', 'type' => 'text', 'required' => true],

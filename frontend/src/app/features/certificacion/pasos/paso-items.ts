@@ -23,6 +23,14 @@ export class PasoItems implements OnInit {
   readonly savingProducto = signal(false);
   targetItem = -1;
   nuevoProducto: Partial<Producto> = {};
+  /** Categoría exigida por el campo producto_ref (atributo identificatorio). */
+  categoriaActual: string | null = null;
+
+  /** Productos visibles para un campo producto_ref, filtrados por su categoría. */
+  productosDe(field: PlantillaField): Producto[] {
+    if (!field.categoria) return this.productos();
+    return this.productos().filter((p) => p.categoria === field.categoria);
+  }
 
   ngOnInit(): void {
     this.api.list<Producto>('productos').subscribe((data) => this.productos.set(data));
@@ -44,9 +52,11 @@ export class PasoItems implements OnInit {
   }
 
   // ───── producto rápido ─────
-  abrirNuevoProducto(index: number): void {
+  abrirNuevoProducto(index: number, categoria?: string): void {
     this.targetItem = index;
-    this.nuevoProducto = { activo: true } as Partial<Producto>;
+    this.categoriaActual = categoria ?? null;
+    // Pre-etiqueta el nuevo producto con la categoría del campo para que aparezca en el filtro.
+    this.nuevoProducto = { activo: true, categoria: categoria ?? '' } as Partial<Producto>;
     this.showProductoForm.set(true);
   }
 

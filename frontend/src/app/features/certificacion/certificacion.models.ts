@@ -9,6 +9,8 @@ export interface PlantillaField {
   type: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'producto_ref';
   required?: boolean;
   options?: { value: string; label: string }[];
+  /** Para producto_ref: filtra los productos por esta categoría (atributo identificatorio). */
+  categoria?: string;
 }
 
 export interface PlantillaTrabajo {
