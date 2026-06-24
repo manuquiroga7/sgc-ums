@@ -47,7 +47,17 @@ export class WizardStore {
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
 
+  /** Código de la variante elegida (tipos con variantes, p.ej. Inmersión A1/A3). */
+  readonly variante = signal<string>('');
+
   readonly plantilla = computed<Plantilla | null>(() => this.tipo()?.plantilla ?? null);
+
+  /** Intervalo de meses vigente: el de la variante elegida o el de la plantilla. */
+  private intervaloActual(): number {
+    const pl = this.plantilla();
+    const v = pl?.variantes?.find((x) => x.codigo === this.variante());
+    return v?.intervalo_meses ?? pl?.intervalo_meses ?? 12;
+  }
 
   // ───── Navegación ─────
   goTo(i: number): void {
@@ -93,13 +103,22 @@ export class WizardStore {
   // ───── Mutaciones ─────
   setTipo(t: TipoCertificado): void {
     this.tipo.set(t);
-    const meses = t.plantilla?.intervalo_meses ?? t.intervalo_meses ?? 12;
+    // Variante por defecto: la primera, si el tipo tiene variantes.
+    this.variante.set(t.plantilla?.variantes?.[0]?.codigo ?? '');
     this.datos.update((d) => ({
       ...d,
-      fecha_proximo_servicio: sumarMeses(d.fecha_emision, meses),
+      fecha_proximo_servicio: sumarMeses(d.fecha_emision, this.intervaloActual()),
     }));
     // Reinicia ítems al cambiar de tipo (cambia el esquema).
     this.items.set([]);
+  }
+
+  setVariante(codigo: string): void {
+    this.variante.set(codigo);
+    this.datos.update((d) => ({
+      ...d,
+      fecha_proximo_servicio: sumarMeses(d.fecha_emision, this.intervaloActual()),
+    }));
   }
 
   setBuque(b: Buque): void {
@@ -125,8 +144,7 @@ export class WizardStore {
       const next = { ...d, ...patch };
       // Si cambia la fecha de emisión, recalcula el próximo servicio.
       if (patch.fecha_emision) {
-        const meses = this.plantilla()?.intervalo_meses ?? 12;
-        next.fecha_proximo_servicio = sumarMeses(patch.fecha_emision, meses);
+        next.fecha_proximo_servicio = sumarMeses(patch.fecha_emision, this.intervaloActual());
       }
       return next;
     });
@@ -178,6 +196,7 @@ export class WizardStore {
     this.step.set(0);
     this.maxStep.set(0);
     this.tipo.set(null);
+    this.variante.set('');
     this.buque.set(null);
     this.items.set([]);
     this.datos.set({
@@ -200,6 +219,7 @@ export class WizardStore {
       id_buque: this.buque()!.id_buque,
       id_tipo: this.tipo()!.id_tipo,
       ...this.datos(),
+      variante: this.variante() || null,
       estado: 'borrador',
       items: this.items().map((it) => ({
         id_producto: it.id_producto,

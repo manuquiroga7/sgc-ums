@@ -18,9 +18,16 @@ export interface PlantillaTrabajo {
   label: Bilingue;
 }
 
+export interface PlantillaVariante {
+  codigo: string;
+  label: Bilingue;
+  intervalo_meses: number;
+}
+
 export interface Plantilla {
   titulo: Bilingue;
   intervalo_meses: number;
+  variantes?: PlantillaVariante[];
   item_fields: PlantillaField[];
   trabajos: PlantillaTrabajo[];
   textos_legales: { condicion: unknown; texto: Bilingue }[];

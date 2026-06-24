@@ -126,6 +126,7 @@ class CertificadoController extends Controller
             'recomendaciones' => ['nullable', 'string'],
             'idioma' => ['nullable', 'in:es,en'],
             'estado' => ['nullable', 'string', 'max:191'],
+            'variante' => ['nullable', 'string', 'max:20'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.id_producto' => ['nullable', 'exists:productos,id_producto'],
             'items.*.campos' => ['nullable', 'array'],
@@ -145,6 +146,7 @@ class CertificadoController extends Controller
                 'idioma' => $data['idioma'] ?? 'es',
                 'estado' => $data['estado'] ?? 'borrador',
                 'total_unidades' => count($data['items']),
+                'datos_extra' => ! empty($data['variante']) ? ['variante' => $data['variante']] : null,
             ]);
 
             foreach ($data['items'] as $itemData) {

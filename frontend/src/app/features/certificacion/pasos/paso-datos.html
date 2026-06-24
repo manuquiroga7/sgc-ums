@@ -3,6 +3,19 @@
 </p>
 
 <div class="bg-white border border-ums-outline-variant rounded-lg p-6 max-w-2xl">
+  @if (store.plantilla()?.variantes; as variantes) {
+    <div class="mb-4">
+      <label class="block text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">Variante</label>
+      <select [ngModel]="store.variante()" (ngModelChange)="store.setVariante($event)"
+        class="w-full sm:w-1/2 rounded border border-ums-outline-variant px-3 py-2 text-sm bg-white outline-none focus:border-ums-primary">
+        @for (v of variantes; track v.codigo) {
+          <option [value]="v.codigo">{{ v.label.es }}</option>
+        }
+      </select>
+      <p class="text-[11px] text-ums-on-surface-variant mt-1">Define el intervalo del próximo servicio.</p>
+    </div>
+  }
+
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <div>
       <label class="block text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">N° de certificado</label>
