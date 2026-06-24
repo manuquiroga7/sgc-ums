@@ -69,11 +69,17 @@ class PlantillasSeeder extends Seeder
         TipoCertificado::updateOrCreate(
             ['nombre' => 'Traje de Bombero'],
             [
+                'prefijo' => 'TB',
                 'intervalo_meses' => 12,
                 'normativa_aplicable' => 'SOLAS II-2/10 · FSS Code',
                 'descripcion' => 'Inspección de trajes de bombero y sus componentes.',
                 'plantilla' => $bombero,
             ],
         );
+
+        // Prefijos para los tipos sembrados por MaestrosSeeder.
+        TipoCertificado::where('nombre', 'Certificación de balsas salvavidas')->update(['prefijo' => 'BS']);
+        TipoCertificado::where('nombre', 'Inspección anual de equipos de seguridad')->update(['prefijo' => 'IA']);
+        TipoCertificado::where('nombre', 'Prueba hidrostática de cilindros')->update(['prefijo' => 'PH']);
     }
 }

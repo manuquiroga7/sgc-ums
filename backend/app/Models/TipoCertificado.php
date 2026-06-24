@@ -11,7 +11,7 @@ class TipoCertificado extends Model
     protected $primaryKey = 'id_tipo';
 
     protected $fillable = [
-        'nombre', 'intervalo_meses', 'normativa_aplicable', 'descripcion', 'plantilla',
+        'nombre', 'prefijo', 'intervalo_meses', 'normativa_aplicable', 'descripcion', 'plantilla',
     ];
 
     protected $casts = [

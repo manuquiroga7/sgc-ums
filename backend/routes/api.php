@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Certificaciones (wizard): reservar número + crear borrador + listado/detalle
     Route::post('certificados/reservar-numero', [CertificadoController::class, 'reservarNumero']);
+    Route::post('certificados/liberar-numero', [CertificadoController::class, 'liberarNumero']);
     Route::apiResource('certificados', CertificadoController::class)
         ->only(['index', 'store', 'show'])
         ->parameters(['certificados' => 'certificado']);

@@ -43,6 +43,7 @@ class TipoCertificadoController extends Controller
     {
         return $request->validate([
             'nombre' => ['required', 'string', 'max:191'],
+            'prefijo' => ['nullable', 'string', 'max:10'],
             'intervalo_meses' => ['nullable', 'integer', 'min:0'],
             'normativa_aplicable' => ['nullable', 'string', 'max:191'],
             'descripcion' => ['nullable', 'string'],

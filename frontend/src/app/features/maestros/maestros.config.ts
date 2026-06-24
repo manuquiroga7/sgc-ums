@@ -47,6 +47,7 @@ export const TIPOS_CONFIG: MaestroConfig = {
   layout: 'cards',
   fields: [
     { key: 'nombre', label: 'Nombre', type: 'text', required: true, placeholder: 'ej. Inspección anual de equipos' },
+    { key: 'prefijo', label: 'Prefijo (ID)', type: 'text', placeholder: 'ej. TB, BS' },
     { key: 'intervalo_meses', label: 'Intervalo (meses)', type: 'number', placeholder: 'ej. 12' },
     { key: 'normativa_aplicable', label: 'Normativa aplicable', type: 'text', placeholder: 'ej. SOLAS Cap. III' },
     { key: 'descripcion', label: 'Descripción', type: 'textarea' },

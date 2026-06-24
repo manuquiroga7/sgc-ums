@@ -30,6 +30,7 @@ export interface Plantilla {
 export interface TipoCertificado {
   id_tipo: number;
   nombre: string;
+  prefijo: string | null;
   intervalo_meses: number | null;
   normativa_aplicable: string | null;
   descripcion: string | null;

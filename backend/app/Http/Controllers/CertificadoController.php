@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Certificado;
+use App\Models\TipoCertificado;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,32 +17,85 @@ class CertificadoController extends Controller
     ];
 
     /**
-     * Reserva atómicamente el próximo número de certificado del año en curso.
-     * El contador solo avanza: el número queda consumido aunque la certificación
-     * no se complete, evitando colisiones entre usuarios concurrentes.
+     * Reserva el próximo número para el tipo dado, formato PREFIJO-AÑO-00000001.
+     * Reutiliza primero el menor número liberado (cancelado); si no hay, avanza
+     * el contador. Todo dentro de una transacción con bloqueo: concurrencia-safe.
      */
-    public function reservarNumero(): JsonResponse
+    public function reservarNumero(Request $request): JsonResponse
     {
+        $request->validate(['id_tipo' => ['required', 'exists:tipos_certificado,id_tipo']]);
+
+        $tipo = TipoCertificado::find($request->id_tipo);
+        $prefijo = $tipo->prefijo ?: 'GEN';
         $anio = (int) date('Y');
 
-        // Asegura la fila del año (idempotente, sin condición de carrera).
-        DB::table('secuencias_certificado')->insertOrIgnore(['anio' => $anio, 'ultimo_numero' => 0]);
+        DB::table('secuencias_certificado')->insertOrIgnore([
+            'prefijo' => $prefijo, 'anio' => $anio, 'ultimo_numero' => 0,
+        ]);
 
-        $proximo = DB::transaction(function () use ($anio) {
+        $numero = DB::transaction(function () use ($prefijo, $anio) {
+            // Bloquea la fila del contador: serializa todas las reservas de este (prefijo, año).
             $sec = DB::table('secuencias_certificado')
-                ->where('anio', $anio)
-                ->lockForUpdate()
-                ->first();
+                ->where('prefijo', $prefijo)->where('anio', $anio)
+                ->lockForUpdate()->first();
+
+            // ¿Hay un número liberado para reutilizar? (el menor primero)
+            $liberado = DB::table('numeros_liberados')
+                ->where('prefijo', $prefijo)->where('anio', $anio)
+                ->orderBy('numero')->lockForUpdate()->first();
+
+            if ($liberado) {
+                DB::table('numeros_liberados')->where('id', $liberado->id)->delete();
+                return $liberado->numero;
+            }
 
             $n = $sec->ultimo_numero + 1;
-            DB::table('secuencias_certificado')->where('anio', $anio)->update(['ultimo_numero' => $n]);
+            DB::table('secuencias_certificado')
+                ->where('prefijo', $prefijo)->where('anio', $anio)
+                ->update(['ultimo_numero' => $n]);
 
             return $n;
         });
 
-        $numero = sprintf('%04d/%02d', $proximo, $anio % 100);
+        return response()->json([
+            'numero_certificado' => sprintf('%s-%04d-%08d', $prefijo, $anio, $numero),
+        ]);
+    }
 
-        return response()->json(['numero_certificado' => $numero]);
+    /**
+     * Libera un número reservado (al cancelar/abandonar) para que se reutilice.
+     * No libera si el número ya pertenece a un certificado concretado.
+     */
+    public function liberarNumero(Request $request): JsonResponse
+    {
+        $request->validate(['numero_certificado' => ['required', 'string']]);
+
+        $partes = $this->parsearNumero($request->numero_certificado);
+        if (! $partes) {
+            return response()->json(['ok' => false]);
+        }
+
+        // No liberar un número que ya quedó asignado a un certificado guardado.
+        if (Certificado::where('numero_certificado', $request->numero_certificado)->exists()) {
+            return response()->json(['ok' => false]);
+        }
+
+        [$prefijo, $anio, $numero] = $partes;
+        DB::table('numeros_liberados')->insertOrIgnore([
+            'prefijo' => $prefijo, 'anio' => $anio, 'numero' => $numero,
+        ]);
+
+        return response()->json(['ok' => true]);
+    }
+
+    /** Devuelve [prefijo, anio, numero] o null si el formato no es válido. */
+    private function parsearNumero(string $valor): ?array
+    {
+        if (! preg_match('/^([A-Z0-9]+)-(\d{4})-(\d{1,8})$/', trim($valor), $m)) {
+            return null;
+        }
+
+        return [$m[1], (int) $m[2], (int) $m[3]];
     }
 
     public function index(): JsonResponse

@@ -19,6 +19,11 @@ export class ApiService {
     return this.http.post<T>(`${this.base}/${resource}`, body);
   }
 
+  /** POST genérico (body y respuesta independientes). */
+  post<T>(resource: string, body: unknown): Observable<T> {
+    return this.http.post<T>(`${this.base}/${resource}`, body);
+  }
+
   update<T>(resource: string, id: number | string, body: Partial<T>): Observable<T> {
     return this.http.put<T>(`${this.base}/${resource}/${id}`, body);
   }

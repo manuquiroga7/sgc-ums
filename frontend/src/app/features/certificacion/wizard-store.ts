@@ -58,6 +58,10 @@ export class WizardStore {
 
   next(): void {
     if (this.step() < STEPS.length - 1 && this.canProceed()) {
+      // Al dejar el paso Tipo se reserva el número (numeración por tipo).
+      if (this.step() === 0) {
+        this.asegurarReserva();
+      }
       const n = this.step() + 1;
       this.step.set(n);
       this.maxStep.set(Math.max(this.maxStep(), n));
@@ -128,17 +132,49 @@ export class WizardStore {
     });
   }
 
-  /** Reserva el número de certificado al iniciar (atómico en el backend). */
-  iniciar(): void {
+  // ───── Numeración (reserva / liberación) ─────
+  private reservadoParaTipo: number | null = null;
+  private committed = false;
+
+  /** Reserva un número para el tipo actual; si cambió de tipo, libera el anterior. */
+  private asegurarReserva(): void {
+    const t = this.tipo();
+    if (!t) return;
+    if (this.reservadoParaTipo === t.id_tipo && this.datos().numero_certificado) return;
+
+    const anterior = this.datos().numero_certificado;
+    if (anterior) this.liberar(anterior);
+
+    this.reservadoParaTipo = t.id_tipo;
+    this.patchDatos({ numero_certificado: '' });
     this.api
-      .create<{ numero_certificado: string }>('certificados/reservar-numero', {})
+      .post<{ numero_certificado: string }>('certificados/reservar-numero', { id_tipo: t.id_tipo })
       .subscribe({
         next: (res) => this.patchDatos({ numero_certificado: res.numero_certificado }),
         error: () => {},
       });
   }
 
+  private liberar(numero: string): void {
+    this.api.post('certificados/liberar-numero', { numero_certificado: numero }).subscribe({ error: () => {} });
+  }
+
+  /** Marca el número como concretado (al guardar): ya no se libera. */
+  marcarConcretado(): void {
+    this.committed = true;
+  }
+
+  /** Libera el número reservado si la certificación no se completó (cancelar/abandonar). */
+  liberarSiPendiente(): void {
+    const numero = this.datos().numero_certificado;
+    if (numero && !this.committed) {
+      this.liberar(numero);
+    }
+  }
+
   reset(): void {
+    this.reservadoParaTipo = null;
+    this.committed = false;
     this.step.set(0);
     this.maxStep.set(0);
     this.tipo.set(null);
