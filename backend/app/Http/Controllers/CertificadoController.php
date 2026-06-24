@@ -15,6 +15,35 @@ class CertificadoController extends Controller
         'aprobacion', 'venc_luz', 'resultado',
     ];
 
+    /**
+     * Reserva atómicamente el próximo número de certificado del año en curso.
+     * El contador solo avanza: el número queda consumido aunque la certificación
+     * no se complete, evitando colisiones entre usuarios concurrentes.
+     */
+    public function reservarNumero(): JsonResponse
+    {
+        $anio = (int) date('Y');
+
+        // Asegura la fila del año (idempotente, sin condición de carrera).
+        DB::table('secuencias_certificado')->insertOrIgnore(['anio' => $anio, 'ultimo_numero' => 0]);
+
+        $proximo = DB::transaction(function () use ($anio) {
+            $sec = DB::table('secuencias_certificado')
+                ->where('anio', $anio)
+                ->lockForUpdate()
+                ->first();
+
+            $n = $sec->ultimo_numero + 1;
+            DB::table('secuencias_certificado')->where('anio', $anio)->update(['ultimo_numero' => $n]);
+
+            return $n;
+        });
+
+        $numero = sprintf('%04d/%02d', $proximo, $anio % 100);
+
+        return response()->json(['numero_certificado' => $numero]);
+    }
+
     public function index(): JsonResponse
     {
         $certificados = Certificado::with(['buque', 'tipo'])
@@ -36,7 +65,7 @@ class CertificadoController extends Controller
         $data = $request->validate([
             'id_buque' => ['required', 'exists:buques,id_buque'],
             'id_tipo' => ['required', 'exists:tipos_certificado,id_tipo'],
-            'numero_certificado' => ['nullable', 'string', 'max:191'],
+            'numero_certificado' => ['nullable', 'string', 'max:191', 'unique:certificados,numero_certificado'],
             'fecha_emision' => ['nullable', 'date'],
             'fecha_proximo_servicio' => ['nullable', 'date'],
             'inspector' => ['nullable', 'string', 'max:191'],

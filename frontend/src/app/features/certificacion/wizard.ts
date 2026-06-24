@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { WizardStore } from './wizard-store';
 import { PasoTipo } from './pasos/paso-tipo';
 import { PasoBuque } from './pasos/paso-buque';
@@ -13,11 +13,16 @@ import { PasoRevision } from './pasos/paso-revision';
   providers: [WizardStore],
   templateUrl: './wizard.html',
 })
-export class Wizard {
+export class Wizard implements OnInit {
   readonly store = inject(WizardStore);
+  private readonly router = inject(Router);
 
   readonly savedOk = signal(false);
   readonly savedNumero = signal<string>('');
+
+  ngOnInit(): void {
+    this.store.iniciar();
+  }
 
   guardar(): void {
     this.store.guardarBorrador().subscribe({
@@ -33,8 +38,13 @@ export class Wizard {
     });
   }
 
+  cancelar(): void {
+    this.router.navigate(['/']);
+  }
+
   cargarOtra(): void {
     this.store.reset();
     this.savedOk.set(false);
+    this.store.iniciar();
   }
 }

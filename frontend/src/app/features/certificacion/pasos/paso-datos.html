@@ -6,9 +6,9 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <div>
       <label class="block text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">N° de certificado</label>
-      <input type="text" [ngModel]="store.datos().numero_certificado" (ngModelChange)="store.patchDatos({ numero_certificado: $event })"
-        placeholder="ej. 2806/25"
-        class="w-full rounded border border-ums-outline-variant px-3 py-2 text-sm outline-none focus:border-ums-primary focus:ring-2 focus:ring-ums-primary/20" />
+      <input type="text" [ngModel]="store.datos().numero_certificado" name="numero_certificado" readonly
+        class="w-full rounded border border-ums-outline-variant bg-ums-surface-low px-3 py-2 text-sm font-mono text-ums-on-surface outline-none" />
+      <p class="text-[11px] text-ums-on-surface-variant mt-1">Asignado automáticamente al iniciar.</p>
     </div>
     <div>
       <label class="block text-xs font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">Inspector</label>

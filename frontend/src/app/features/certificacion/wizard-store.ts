@@ -128,6 +128,16 @@ export class WizardStore {
     });
   }
 
+  /** Reserva el número de certificado al iniciar (atómico en el backend). */
+  iniciar(): void {
+    this.api
+      .create<{ numero_certificado: string }>('certificados/reservar-numero', {})
+      .subscribe({
+        next: (res) => this.patchDatos({ numero_certificado: res.numero_certificado }),
+        error: () => {},
+      });
+  }
+
   reset(): void {
     this.step.set(0);
     this.maxStep.set(0);

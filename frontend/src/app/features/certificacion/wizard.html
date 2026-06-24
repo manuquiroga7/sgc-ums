@@ -23,6 +23,27 @@
   </div>
 } @else {
   <div class="max-w-5xl">
+    <!-- Cabecera: número reservado + cancelar -->
+    <div class="flex items-center justify-between mb-4">
+      @if (store.datos().numero_certificado) {
+        <span class="inline-flex items-center gap-2 rounded bg-ums-primary/10 text-ums-primary text-sm font-semibold px-3 py-1.5">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zm0 0v6h6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Certificado N° {{ store.datos().numero_certificado }}
+        </span>
+      } @else {
+        <span class="text-sm text-ums-on-surface-variant">Asignando número…</span>
+      }
+      <button type="button" (click)="cancelar()"
+        class="inline-flex items-center gap-1.5 rounded px-3 py-1.5 text-sm font-semibold text-ums-danger hover:bg-ums-danger/10 transition">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 6l12 12M18 6 6 18" stroke-linecap="round" />
+        </svg>
+        Cancelar
+      </button>
+    </div>
+
     <!-- Stepper -->
     <div class="flex items-center mb-2">
       @for (s of store.steps; track $index; let last = $last) {
