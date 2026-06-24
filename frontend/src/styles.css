@@ -46,3 +46,16 @@ body {
   background-color: var(--color-ums-surface);
   color: var(--color-ums-on-surface);
 }
+
+/*
+ * Regla del proyecto: todo botón clickeable muestra cursor-pointer.
+ * (Tailwind v4 ya no lo aplica por defecto.) Los deshabilitados quedan excluidos.
+ */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  label[for],
+  summary {
+    cursor: pointer;
+  }
+}
