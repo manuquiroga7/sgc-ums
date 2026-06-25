@@ -84,6 +84,8 @@ class PlantillasSeeder extends Seeder
 
         $this->trajeInmersion();
         $this->cilindrosGas();
+        $this->chalecosAros();
+        $this->equipoRespiracion();
     }
 
     // ───── Traje de Inmersión / Antiexposición ─────
@@ -230,6 +232,134 @@ class PlantillasSeeder extends Seeder
                 'intervalo_meses' => 12,
                 'normativa_aplicable' => 'SOLAS II-2/III · ISO 9809',
                 'descripcion' => 'Inspección de cilindros de gas (aire, oxígeno, nitrógeno).',
+                'plantilla' => $plantilla,
+            ],
+        );
+    }
+
+    // ───── Chalecos Salvavidas / Aros Salvavidas ─────
+    private function chalecosAros(): void
+    {
+        $cat = 'Chaleco/Aro salvavidas';
+        // Reutiliza el chaleco inflable ya sembrado, ajustando su categoría.
+        Producto::where('nombre', 'Chaleco salvavidas inflable')->update(['categoria' => $cat, 'subtipo' => 'Inflable']);
+        Producto::firstOrCreate(['nombre' => 'Chaleco salvavidas rígido'], ['categoria' => $cat, 'subtipo' => 'Rígido (inherente)']);
+        Producto::firstOrCreate(['nombre' => 'Aro salvavidas'], ['categoria' => $cat, 'subtipo' => 'Aro']);
+
+        $plantilla = [
+            'titulo' => [
+                'es' => 'Certificado de Inspección de Chalecos Salvavidas / Aros Salvavidas',
+                'en' => 'Certificate of Inspection for Lifejackets / Lifebuoys',
+            ],
+            'intervalo_meses' => 12,
+            'item_fields' => [
+                ['key' => 'producto', 'label' => 'Tipo / Type', 'type' => 'producto_ref', 'categoria' => $cat],
+                ['key' => 'fabricante', 'label' => 'Fabricante / Make', 'type' => 'text'],
+                ['key' => 'modelo', 'label' => 'Modelo / Model', 'type' => 'text'],
+                ['key' => 'numero_serie', 'label' => 'N° de serie / Serial No', 'type' => 'text', 'required' => true],
+                ['key' => 'venc_luz', 'label' => 'Venc. luz / Light exp. date', 'type' => 'date'],
+                ['key' => 'aprobacion', 'label' => 'Aprobación / Approval', 'type' => 'text'],
+            ],
+            'trabajos' => [
+                ['codigo' => '1', 'label' => ['es' => 'Inspección visual de todos los componentes, estado y partes adjuntas', 'en' => 'Visual inspection of all components, condition and attached parts']],
+                ['codigo' => '2', 'label' => ['es' => 'Prueba de inflado', 'en' => 'Inflation test']],
+                ['codigo' => '3', 'label' => ['es' => 'Prueba de presión de aire', 'en' => 'Air pressure test']],
+                ['codigo' => '4', 'label' => ['es' => 'Prueba de flotabilidad', 'en' => 'Buoyancy test']],
+                ['codigo' => '5', 'label' => ['es' => 'Nuevo suministrado/instalado', 'en' => 'New supply/installed']],
+                ['codigo' => '6', 'label' => ['es' => 'Recomendaciones', 'en' => 'Recommendations']],
+                ['codigo' => '7', 'label' => ['es' => 'Otros', 'en' => 'Others']],
+            ],
+            'textos_legales' => [
+                [
+                    'condicion' => ['productos' => ['Chaleco salvavidas inflable', 'Chaleco salvavidas rígido']],
+                    'texto' => [
+                        'es' => 'Inspeccionado y mantenido de acuerdo con SOLAS Capítulo III Regla 20, Código LSA Sección 2.2 e instrucciones del fabricante.',
+                        'en' => "Inspected and serviced in accordance with SOLAS Chapter III Regulation 20, LSA Code Section 2.2 and manufacturer's instructions.",
+                    ],
+                ],
+                [
+                    'condicion' => ['productos' => ['Aro salvavidas']],
+                    'texto' => [
+                        'es' => 'Inspeccionado y mantenido de acuerdo con las instrucciones del fabricante y en cumplimiento con el SOLAS Capítulo III – Dispositivos y Medios de Salvamento.',
+                        'en' => 'Inspected and maintained in accordance with the manufacturer\'s instructions and in compliance with SOLAS Chapter III – Life-Saving Appliances and Arrangements.',
+                    ],
+                ],
+            ],
+            'notas' => [
+                [
+                    'key' => 'nota_luces',
+                    'texto' => [
+                        'es' => 'NOTA: Cuando las luces próximas a vencer antes del próximo servicio anual requieren reemplazo, o cuando el equipo se recibe sin luces correspondientes, se recomienda su sustitución o suministro al propietario, capitán o representante. Sin embargo, dicha recomendación ha sido formalmente rechazada por la parte responsable.',
+                        'en' => 'NOTE: When lights are approaching expiry before the next annual service or when equipment is received without the corresponding lights, replacement or supply is recommended to the owner, master or their representative. However, such recommendation has been formally declined by the responsible party.',
+                    ],
+                ],
+            ],
+        ];
+
+        TipoCertificado::updateOrCreate(
+            ['nombre' => 'Chalecos / Aros Salvavidas'],
+            [
+                'prefijo' => 'CH',
+                'intervalo_meses' => 12,
+                'normativa_aplicable' => 'SOLAS III/20 · Código LSA',
+                'descripcion' => 'Inspección de chalecos salvavidas (inflables/rígidos) y aros salvavidas.',
+                'plantilla' => $plantilla,
+            ],
+        );
+    }
+
+    // ───── Equipo de Respiración Autónomo (SCBA / EEBD) ─────
+    private function equipoRespiracion(): void
+    {
+        $cat = 'Equipo de Respiración';
+        foreach ([
+            'Aparato SCBA / ERA',
+            'Aparato EEBD',
+            'Otro equipo de respiración',
+        ] as $nombre) {
+            Producto::firstOrCreate(['nombre' => $nombre], ['categoria' => $cat]);
+        }
+
+        $plantilla = [
+            'titulo' => [
+                'es' => 'Certificado de Inspección de un Equipo de Respiración Autónomo',
+                'en' => 'Certificate of Inspection of an Air Breathing Apparatus',
+            ],
+            'intervalo_meses' => 12,
+            'item_fields' => [
+                ['key' => 'producto', 'label' => 'Tipo / Type', 'type' => 'producto_ref', 'categoria' => $cat],
+                ['key' => 'fabricante', 'label' => 'Fabricante / Make', 'type' => 'text'],
+                ['key' => 'modelo', 'label' => 'Modelo / Model', 'type' => 'text'],
+                ['key' => 'numero_serie', 'label' => 'N° de serie / Serial No', 'type' => 'text', 'required' => true],
+                ['key' => 'remarks', 'label' => 'Observaciones / Remarks', 'type' => 'text'],
+            ],
+            'trabajos' => [
+                ['codigo' => '1', 'label' => ['es' => 'Controlado a bordo', 'en' => 'Checked on board']],
+                ['codigo' => '2', 'label' => ['es' => 'Inspeccionado en taller', 'en' => 'Inspected in workshop']],
+                ['codigo' => '3', 'label' => ['es' => 'Válvula cambiada', 'en' => 'Valve replaced']],
+                ['codigo' => '6', 'label' => ['es' => 'Manómetro cambiado', 'en' => 'Pressure gauge replaced']],
+                ['codigo' => '7', 'label' => ['es' => 'Válvula reparada', 'en' => 'Valve repaired']],
+                ['codigo' => '8', 'label' => ['es' => 'Nuevo', 'en' => 'New']],
+            ],
+            'textos_legales' => [
+                [
+                    'condicion' => null,
+                    'texto' => [
+                        'es' => 'Por la presente certificamos que el equipo mencionado fue probado de acuerdo con las directrices del fabricante y se encontró en condiciones correctas de uso, en cumplimiento con la Regulación SOLAS II-2/13.4 para EEBD y la Regulación SOLAS II-2/10.10 para SCBA.',
+                        'en' => "We hereby certify that the mentioned equipment was tested according to the manufacturer's guidelines, and was found in correct condition of use, in compliance with SOLAS Regulation II-2/13.4 for EEBD and SOLAS Regulation II-2/10.10 for SCBA.",
+                    ],
+                ],
+            ],
+            'notas' => [],
+        ];
+
+        TipoCertificado::updateOrCreate(
+            ['nombre' => 'Equipo de Respiración (SCBA/EEBD)'],
+            [
+                'prefijo' => 'RA',
+                'intervalo_meses' => 12,
+                'normativa_aplicable' => 'SOLAS II-2/10.10 · II-2/13.4',
+                'descripcion' => 'Inspección de equipos de respiración autónomos (SCBA) y dispositivos de escape (EEBD).',
                 'plantilla' => $plantilla,
             ],
         );
