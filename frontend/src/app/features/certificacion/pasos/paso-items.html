@@ -98,13 +98,26 @@
   }
 </div>
 
-<button type="button" (click)="store.addItem()"
-  class="mt-4 inline-flex items-center gap-2 rounded border border-dashed border-ums-outline px-4 py-2.5 text-sm font-semibold text-ums-primary hover:bg-ums-primary/5 transition">
-  <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M12 5v14m-7-7h14" stroke-linecap="round" stroke-linejoin="round" />
-  </svg>
-  Agregar ítem
-</button>
+<div class="mt-4 flex flex-wrap gap-3">
+  <button type="button" (click)="store.addItem()"
+    class="inline-flex items-center gap-2 rounded border border-dashed border-ums-outline px-4 py-2.5 text-sm font-semibold text-ums-primary hover:bg-ums-primary/5 transition">
+    <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 5v14m-7-7h14" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    Agregar ítem
+  </button>
+
+  @if (store.items().length > 0) {
+    <button type="button" (click)="store.duplicarPrimero()"
+      class="inline-flex items-center gap-2 rounded border border-dashed border-ums-outline px-4 py-2.5 text-sm font-semibold text-ums-primary hover:bg-ums-primary/5 transition">
+      <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 9h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      Copiar del 1° ítem
+    </button>
+  }
+</div>
 
 <!-- Modal alta rápida de producto -->
 @if (showProductoForm()) {

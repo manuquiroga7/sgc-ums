@@ -139,6 +139,22 @@ export class WizardStore {
     this.items.update((arr) => arr.filter((_, i) => i !== index));
   }
 
+  /** Agrega un ítem copiando los datos del primero (campos, trabajos y producto). */
+  duplicarPrimero(): void {
+    const items = this.items();
+    if (items.length === 0) {
+      this.addItem();
+      return;
+    }
+    const base = items[0];
+    const copia: WizardItem = {
+      id_producto: base.id_producto,
+      campos: { ...base.campos },
+      trabajos: [...base.trabajos],
+    };
+    this.items.update((arr) => [...arr, copia]);
+  }
+
   patchDatos(patch: Partial<WizardDatos>): void {
     this.datos.update((d) => {
       const next = { ...d, ...patch };
