@@ -83,6 +83,7 @@ class PlantillasSeeder extends Seeder
         TipoCertificado::where('nombre', 'Prueba hidrostática de cilindros')->update(['prefijo' => 'PH']);
 
         $this->trajeInmersion();
+        $this->cilindrosGas();
     }
 
     // ───── Traje de Inmersión / Antiexposición ─────
@@ -157,6 +158,78 @@ class PlantillasSeeder extends Seeder
                 'intervalo_meses' => 12,
                 'normativa_aplicable' => 'MSC/Circ.1114',
                 'descripcion' => 'Inspección de trajes de inmersión / antiexposición (variantes 1 y 3 años).',
+                'plantilla' => $plantilla,
+            ],
+        );
+    }
+
+    // ───── Cilindros de Gas (Aire / Oxígeno / Nitrógeno) ─────
+    private function cilindrosGas(): void
+    {
+        // El "Tipo" del documento (código 1-6) se modela como producto/subtipo.
+        $productos = [
+            'Cilindro de Aire SCBA',
+            'Cilindro de Aire EEBD',
+            'Cilindro de Oxígeno Medicinal',
+            'Cilindro de Nitrógeno',
+            'Cilindro de Aire para Bote Salvavidas',
+            'Cilindro de Otro Tipo',
+        ];
+        foreach ($productos as $nombre) {
+            Producto::firstOrCreate(['nombre' => $nombre], ['categoria' => 'Cilindro de Gas']);
+        }
+
+        $textoEs = "Por la presente certificamos que el equipo mencionado fue probado de acuerdo con las directrices del fabricante y se encontró en condiciones correctas de uso, en cumplimiento con las siguientes regulaciones SOLAS:\n".
+            "• Cilindro de Aire SCBA → SOLAS Capítulo II-2, Regulación 10.10 (Seguridad contra incendios).\n".
+            "• Cilindro de Aire EEBD → SOLAS Capítulo II-2, Regulación 13.4 (Dispositivos de escape de emergencia).\n".
+            "• Cilindro de Oxígeno Medicinal → SOLAS Capítulo III, Regulación 4, junto con MFAG (Guía de Primeros Auxilios Médicos) y requisitos del Código IMDG.\n".
+            "• Cilindro de Nitrógeno → SOLAS Capítulo II-2, Regulaciones 10 y 4 (Seguridad contra incendios, sistemas de gas inerte).\n".
+            "• Cilindro de Aire para Bote Salvavidas → SOLAS Capítulo III, Regulaciones 31 y 34 (Aparatos de salvamento).";
+        $textoEn = "We hereby certify that the mentioned equipment was tested according to the manufacturer's guidelines and was found in correct condition of use, in compliance with the following SOLAS regulations:\n".
+            "• SCBA Air Cylinder → SOLAS Chapter II-2, Regulation 10.10 (Fire Safety).\n".
+            "• EEBD Air Cylinder → SOLAS Chapter II-2, Regulation 13.4 (Emergency Escape Breathing Devices).\n".
+            "• Medical Oxygen Cylinder → SOLAS Chapter III, Regulation 4, together with MFAG (Medical First Aid Guide) and IMDG Code requirements.\n".
+            "• Nitrogen Cylinder → SOLAS Chapter II-2, Regulations 10 and 4 (Fire Safety, inert gas systems).\n".
+            "• Lifeboat Air Cylinder → SOLAS Chapter III, Regulations 31 and 34 (Life-saving appliances).";
+
+        $plantilla = [
+            'titulo' => [
+                'es' => 'Certificado de Inspección de Cilindros de Gas (Aire / Oxígeno / Nitrógeno)',
+                'en' => 'Certificate of Inspection of Gas Cylinders (Air / Oxygen / Nitrogen)',
+            ],
+            'intervalo_meses' => 12,
+            'item_fields' => [
+                ['key' => 'producto', 'label' => 'Tipo / Type', 'type' => 'producto_ref', 'categoria' => 'Cilindro de Gas'],
+                ['key' => 'numero_serie', 'label' => 'N° de serie / Serial No', 'type' => 'text', 'required' => true],
+                ['key' => 'presion_servicio', 'label' => 'Presión de servicio / Pressure service', 'type' => 'text'],
+                ['key' => 'volumen', 'label' => 'Volumen (litros) / Volume (litres)', 'type' => 'number'],
+                ['key' => 'ultima_prueba_hidraulica', 'label' => 'Última prueba hidráulica / Last hydrotest', 'type' => 'text'],
+            ],
+            'trabajos' => [
+                ['codigo' => '1', 'label' => ['es' => 'Controlado a bordo', 'en' => 'Checked on board']],
+                ['codigo' => '2', 'label' => ['es' => 'Inspeccionado en taller', 'en' => 'Inspected in workshop']],
+                ['codigo' => '3', 'label' => ['es' => 'Cargado', 'en' => 'Recharged']],
+                ['codigo' => '4', 'label' => ['es' => 'Prueba hidráulica', 'en' => 'Hydrostatic test']],
+                ['codigo' => '5', 'label' => ['es' => 'Válvula cambiada', 'en' => 'Valve replaced']],
+                ['codigo' => '6', 'label' => ['es' => 'Manómetro cambiado', 'en' => 'Pressure gauge replaced']],
+                ['codigo' => '7', 'label' => ['es' => 'Válvula reparada', 'en' => 'Valve repaired']],
+                ['codigo' => '8', 'label' => ['es' => 'Mantenimiento externo', 'en' => 'External maintenance']],
+                ['codigo' => '9', 'label' => ['es' => 'Nuevo', 'en' => 'New']],
+                ['codigo' => '10', 'label' => ['es' => 'Otro', 'en' => 'Other']],
+            ],
+            'textos_legales' => [
+                ['condicion' => null, 'texto' => ['es' => $textoEs, 'en' => $textoEn]],
+            ],
+            'notas' => [],
+        ];
+
+        TipoCertificado::updateOrCreate(
+            ['nombre' => 'Cilindros de Gas'],
+            [
+                'prefijo' => 'CG',
+                'intervalo_meses' => 12,
+                'normativa_aplicable' => 'SOLAS II-2/III · ISO 9809',
+                'descripcion' => 'Inspección de cilindros de gas (aire, oxígeno, nitrógeno).',
                 'plantilla' => $plantilla,
             ],
         );
