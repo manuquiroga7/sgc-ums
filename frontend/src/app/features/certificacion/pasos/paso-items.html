@@ -9,14 +9,26 @@
     <div class="bg-white border border-ums-outline-variant rounded-lg p-5">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-sm font-bold text-ums-primary">Ítem {{ $index + 1 }}</h3>
-        @if (store.items().length > 1) {
-          <button type="button" (click)="store.removeItem($index)" title="Quitar ítem"
-            class="inline-flex items-center justify-center h-8 w-8 rounded text-ums-danger hover:bg-ums-danger/10 transition">
-            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
-        }
+        <div class="flex items-center gap-2">
+          @if ($index > 0) {
+            <button type="button" (click)="store.copiarPrimeroEn($index)"
+              class="inline-flex items-center gap-1.5 rounded px-2.5 py-1.5 text-xs font-semibold text-ums-primary hover:bg-ums-primary/10 transition">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 9h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Copiar del 1° ítem
+            </button>
+          }
+          @if (store.items().length > 1) {
+            <button type="button" (click)="store.removeItem($index)" title="Quitar ítem"
+              class="inline-flex items-center justify-center h-8 w-8 rounded text-ums-danger hover:bg-ums-danger/10 transition">
+              <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          }
+        </div>
       </div>
 
       <!-- Campos dinámicos -->
@@ -98,26 +110,13 @@
   }
 </div>
 
-<div class="mt-4 flex flex-wrap gap-3">
-  <button type="button" (click)="store.addItem()"
-    class="inline-flex items-center gap-2 rounded border border-dashed border-ums-outline px-4 py-2.5 text-sm font-semibold text-ums-primary hover:bg-ums-primary/5 transition">
-    <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 5v14m-7-7h14" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-    Agregar ítem
-  </button>
-
-  @if (store.items().length > 0) {
-    <button type="button" (click)="store.duplicarPrimero()"
-      class="inline-flex items-center gap-2 rounded border border-dashed border-ums-outline px-4 py-2.5 text-sm font-semibold text-ums-primary hover:bg-ums-primary/5 transition">
-      <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M9 9h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-      Copiar del 1° ítem
-    </button>
-  }
-</div>
+<button type="button" (click)="store.addItem()"
+  class="mt-4 inline-flex items-center gap-2 rounded border border-dashed border-ums-outline px-4 py-2.5 text-sm font-semibold text-ums-primary hover:bg-ums-primary/5 transition">
+  <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 5v14m-7-7h14" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+  Agregar ítem
+</button>
 
 <!-- Modal alta rápida de producto -->
 @if (showProductoForm()) {
