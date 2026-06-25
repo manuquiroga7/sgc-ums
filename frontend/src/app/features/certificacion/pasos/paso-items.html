@@ -24,7 +24,7 @@
         @for (field of fields(); track field.key) {
           <div [class.col-span-2]="field.type === 'producto_ref'">
             <label class="block text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">
-              {{ field.label }}@if (field.required) {<span class="text-ums-danger"> *</span>}
+              {{ field.label.es }}@if (field.required) {<span class="text-ums-danger"> *</span>}
             </label>
 
             @switch (field.type) {
@@ -50,7 +50,7 @@
                   class="w-full rounded border border-ums-outline-variant px-2 py-2 text-sm bg-white outline-none focus:border-ums-primary">
                   <option value="">—</option>
                   @for (opt of field.options; track opt.value) {
-                    <option [value]="opt.value">{{ opt.label }}</option>
+                    <option [value]="opt.value">{{ opt.label.es }}</option>
                   }
                 </select>
               }

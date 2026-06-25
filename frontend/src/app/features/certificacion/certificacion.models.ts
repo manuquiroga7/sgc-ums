@@ -5,10 +5,11 @@ export interface Bilingue {
 
 export interface PlantillaField {
   key: string;
-  label: string;
+  /** Bilingüe: la UI muestra `es`; `en` se usa solo al generar el PDF. */
+  label: Bilingue;
   type: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'producto_ref';
   required?: boolean;
-  options?: { value: string; label: string }[];
+  options?: { value: string; label: Bilingue }[];
   /** Para producto_ref: filtra los productos por esta categoría (atributo identificatorio). */
   categoria?: string;
 }
