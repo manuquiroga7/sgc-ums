@@ -6,16 +6,16 @@
         <path d="m5 12 5 5 9-11" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </div>
-    <h1 class="text-2xl font-bold text-ums-on-surface mt-4">Certificado guardado en borrador</h1>
+    <h1 class="text-2xl font-bold text-ums-on-surface mt-4">Certificado emitido</h1>
     <p class="text-sm text-ums-on-surface-variant mt-1">
       {{ savedNumero() ? 'Certificado ' + savedNumero() : 'El certificado' }} se guardó correctamente.
     </p>
 
     <!-- Botones PDF -->
     @if (savedId()) {
-      <div class="flex items-center justify-center gap-3 mt-5">
+      <div class="flex items-center justify-center gap-3 mt-5 flex-wrap">
         <a [href]="api.pdfUrl(savedId()!)" target="_blank"
-          class="inline-flex items-center gap-2 rounded bg-ums-primary px-4 py-2.5 text-sm font-semibold text-ums-on-primary hover:bg-ums-primary-container transition cursor-pointer">
+          class="inline-flex items-center gap-2 rounded px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition cursor-pointer" style="background-color: #1B6090;">
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" stroke-linecap="round"/>
             <circle cx="12" cy="12" r="3"/>
@@ -23,7 +23,8 @@
           Ver certificado
         </a>
         <a [href]="api.pdfUrl(savedId()!, true)" target="_blank"
-          class="inline-flex items-center gap-2 rounded border border-ums-outline px-4 py-2.5 text-sm font-semibold text-ums-on-surface hover:bg-ums-surface-container transition cursor-pointer">
+          class="inline-flex items-center gap-2 rounded px-4 py-2.5 text-sm font-semibold text-white transition cursor-pointer"
+          style="background-color: #C8561A;">
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 3v12m0 0-4-4m4 4 4-4M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -32,13 +33,13 @@
       </div>
     }
 
-    <div class="flex items-center justify-center gap-3 mt-4">
+    <div class="flex items-center justify-center gap-3 mt-4 flex-wrap">
       <a routerLink="/"
-        class="rounded px-4 py-2.5 text-sm font-semibold text-ums-on-surface-variant hover:bg-ums-surface-container transition">
+        class="rounded border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 hover:bg-gray-50 transition cursor-pointer">
         Volver al inicio
       </a>
       <button type="button" (click)="cargarOtra()"
-        class="rounded bg-ums-secondary px-4 py-2.5 text-sm font-semibold text-ums-on-secondary hover:bg-ums-secondary-container transition">
+        class="rounded border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 hover:bg-gray-50 transition">
         Cargar otra certificación
       </button>
     </div>
@@ -133,7 +134,7 @@
         <button type="button" (click)="guardar()" [disabled]="store.saving()"
           class="inline-flex items-center gap-2 rounded bg-ums-secondary px-5 py-2.5 text-sm font-semibold text-ums-on-secondary hover:bg-ums-secondary-container transition disabled:opacity-60 disabled:cursor-not-allowed">
           <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          {{ store.saving() ? 'Guardando…' : 'Guardar borrador' }}
+          {{ store.saving() ? 'Certificando…' : 'Certificar' }}
         </button>
       }
     </div>

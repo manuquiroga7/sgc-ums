@@ -53,6 +53,11 @@ export class PasoBuque implements OnInit {
     this.store.setBuque(b);
   }
 
+  seleccionarYAvanzar(b: Buque): void {
+    this.store.setBuque(b);
+    this.store.next();
+  }
+
   abrirNuevo(): void {
     this.nuevo = { activo: true } as Partial<Buque>;
     this.error.set(null);

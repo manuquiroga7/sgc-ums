@@ -51,6 +51,16 @@ export class PasoItems implements OnInit {
     return item.trabajos.includes(codigo);
   }
 
+  setTrabajo(item: WizardItem, codigo: string, valor: string): void {
+    if (valor === 'si') {
+      if (!item.trabajos.includes(codigo)) {
+        item.trabajos = [...item.trabajos, codigo];
+      }
+    } else {
+      item.trabajos = item.trabajos.filter((c) => c !== codigo);
+    }
+  }
+
   // ───── producto rápido ─────
   abrirNuevoProducto(index: number, categoria?: string): void {
     this.targetItem = index;

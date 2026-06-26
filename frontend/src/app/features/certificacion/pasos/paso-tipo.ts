@@ -30,4 +30,11 @@ export class PasoTipo implements OnInit {
       this.store.setTipo(t);
     }
   }
+
+  seleccionarYAvanzar(t: TipoCertificado): void {
+    this.seleccionar(t);
+    if (t.plantilla) {
+      this.store.next();
+    }
+  }
 }

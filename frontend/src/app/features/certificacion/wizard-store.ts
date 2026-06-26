@@ -1,5 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { ApiService } from '../../core/api.service';
+import { PageTitleService } from '../../core/page-title.service';
 import {
   Buque,
   Plantilla,
@@ -27,6 +28,7 @@ function sumarMeses(fechaISO: string, meses: number): string {
 @Injectable()
 export class WizardStore {
   private readonly api = inject(ApiService);
+  private readonly pageTitle = inject(PageTitleService);
 
   readonly steps = STEPS;
   readonly step = signal(0);
@@ -103,6 +105,7 @@ export class WizardStore {
   // ───── Mutaciones ─────
   setTipo(t: TipoCertificado): void {
     this.tipo.set(t);
+    this.pageTitle.set(t.nombre);
     // Variante por defecto: la primera, si el tipo tiene variantes.
     this.variante.set(t.plantilla?.variantes?.[0]?.codigo ?? '');
     this.datos.update((d) => ({
@@ -204,6 +207,7 @@ export class WizardStore {
   }
 
   reset(): void {
+    this.pageTitle.set('Nueva Certificación');
     this.reservadoParaTipo = null;
     this.committed = false;
     this.step.set(0);

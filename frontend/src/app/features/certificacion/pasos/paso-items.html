@@ -94,14 +94,20 @@
       <!-- Trabajos realizados -->
       @if (trabajos().length) {
         <div class="mt-4 pt-4 border-t border-ums-outline-variant">
-          <p class="text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-2">Trabajos realizados</p>
-          <div class="flex flex-wrap gap-x-5 gap-y-2">
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-3">Trabajos realizados</p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             @for (tr of trabajos(); track tr.codigo) {
-              <label class="inline-flex items-start gap-2 cursor-pointer select-none text-sm">
-                <input type="checkbox" [checked]="isTrabajo(item, tr.codigo)" (change)="toggleTrabajo(item, tr.codigo)"
-                  class="mt-0.5 h-4 w-4 rounded border-ums-outline-variant text-ums-primary" />
-                <span class="text-ums-on-surface">{{ tr.label.es }}</span>
-              </label>
+              <div>
+                <label class="block text-[11px] font-semibold uppercase tracking-wide text-ums-on-surface-variant mb-1">
+                  {{ tr.label.es }}
+                </label>
+                <select [ngModel]="isTrabajo(item, tr.codigo) ? 'si' : 'no'"
+                  (ngModelChange)="setTrabajo(item, tr.codigo, $event)"
+                  class="w-full rounded border border-ums-outline-variant px-2 py-2 text-sm bg-white outline-none focus:border-ums-primary">
+                  <option value="no">No</option>
+                  <option value="si">Sí</option>
+                </select>
+              </div>
             }
           </div>
         </div>
