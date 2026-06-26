@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'token.from.query' => \App\Http\Middleware\TokenFromQuery::class,
         ]);
+        // Corre antes de auth:sanctum para que el token query param esté en el header a tiempo.
+        $middleware->prependToGroup('api', \App\Http\Middleware\TokenFromQuery::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
