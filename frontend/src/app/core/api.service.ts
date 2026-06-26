@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 /**
  * Servicio CRUD genérico contra la API REST de Laravel.
@@ -9,6 +10,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly http = inject(HttpClient);
+  private readonly auth = inject(AuthService);
   private readonly base = '/api';
 
   list<T>(resource: string): Observable<T[]> {
@@ -30,5 +32,12 @@ export class ApiService {
 
   remove(resource: string, id: number | string): Observable<void> {
     return this.http.delete<void>(`${this.base}/${resource}/${id}`);
+  }
+
+  /** Construye la URL del PDF con el token Sanctum como query param. */
+  pdfUrl(certificadoId: number, download = false): string {
+    const token = this.auth.token ?? '';
+    const base = `${this.base}/certificados/${certificadoId}/pdf`;
+    return `${base}?token=${encodeURIComponent(token)}${download ? '&download=1' : ''}`;
   }
 }

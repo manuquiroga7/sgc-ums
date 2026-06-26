@@ -6,6 +6,7 @@ import { PasoBuque } from './pasos/paso-buque';
 import { PasoItems } from './pasos/paso-items';
 import { PasoDatos } from './pasos/paso-datos';
 import { PasoRevision } from './pasos/paso-revision';
+import { ApiService } from '../../core/api.service';
 
 @Component({
   selector: 'app-wizard',
@@ -15,10 +16,12 @@ import { PasoRevision } from './pasos/paso-revision';
 })
 export class Wizard implements OnDestroy {
   readonly store = inject(WizardStore);
+  readonly api = inject(ApiService);
   private readonly router = inject(Router);
 
   readonly savedOk = signal(false);
   readonly savedNumero = signal<string>('');
+  readonly savedId = signal<number | null>(null);
 
   guardar(): void {
     this.store.guardarBorrador().subscribe({
@@ -26,6 +29,7 @@ export class Wizard implements OnDestroy {
         this.store.saving.set(false);
         this.store.marcarConcretado();
         this.savedNumero.set(cert?.numero_certificado || `#${cert?.id_certificado ?? ''}`);
+        this.savedId.set(cert?.id_certificado ?? null);
         this.savedOk.set(true);
       },
       error: (err) => {
@@ -43,6 +47,7 @@ export class Wizard implements OnDestroy {
   cargarOtra(): void {
     this.store.reset();
     this.savedOk.set(false);
+    this.savedId.set(null);
   }
 
   ngOnDestroy(): void {
