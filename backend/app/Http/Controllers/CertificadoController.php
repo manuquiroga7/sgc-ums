@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Certificado;
 use App\Models\TipoCertificado;
 use Illuminate\Http\JsonResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -180,5 +181,27 @@ class CertificadoController extends Controller
         $certificado->load(['buque', 'tipo', 'items.trabajos']);
 
         return response()->json($certificado, 201);
+    }
+
+    public function pdf(Certificado $certificado, Request $request): \Illuminate\Http\Response
+    {
+        $certificado->load(['buque', 'tipo', 'items.producto', 'items.trabajos']);
+
+        $plantilla = is_array($certificado->tipo->plantilla)
+            ? $certificado->tipo->plantilla
+            : json_decode($certificado->tipo->plantilla, true) ?? [];
+
+        $pdf = Pdf::loadView('pdf.certificado', [
+            'certificado' => $certificado,
+            'plantilla'   => $plantilla,
+        ])->setPaper('a4', 'portrait');
+
+        $filename = ($certificado->numero_certificado ?? 'certificado') . '.pdf';
+
+        if ($request->boolean('download')) {
+            return $pdf->download($filename);
+        }
+
+        return $pdf->stream($filename);
     }
 }
