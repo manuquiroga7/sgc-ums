@@ -196,6 +196,18 @@ class CertificadoController extends Controller
             'plantilla'   => $plantilla,
         ])->setPaper('a4', 'portrait');
 
+        $dompdf = $pdf->getDomPDF();
+        $dompdf->render();
+        $canvas = $dompdf->getCanvas();
+        $canvas->page_text(
+            $canvas->get_width() - 90,
+            $canvas->get_height() - 28,
+            'Pág. {PAGE_NUM} / {PAGE_COUNT}',
+            null,
+            8,
+            [0.6, 0.6, 0.6]
+        );
+
         $filename = ($certificado->numero_certificado ?? 'certificado') . '.pdf';
 
         if ($request->boolean('download')) {

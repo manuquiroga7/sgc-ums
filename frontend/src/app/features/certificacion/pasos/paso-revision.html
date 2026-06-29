@@ -31,7 +31,6 @@
           <th class="py-1.5 pr-3">Producto</th>
           <th class="py-1.5 pr-3">Fabricante</th>
           <th class="py-1.5 pr-3">N° serie</th>
-          <th class="py-1.5 pr-3">Resultado</th>
           <th class="py-1.5">Trabajos</th>
         </tr>
       </thead>
@@ -42,7 +41,6 @@
             <td class="py-1.5 pr-3">{{ productoNombre(item.id_producto) }}</td>
             <td class="py-1.5 pr-3">{{ item.campos['fabricante'] || '—' }}</td>
             <td class="py-1.5 pr-3 font-mono">{{ item.campos['numero_serie'] || '—' }}</td>
-            <td class="py-1.5 pr-3">{{ item.campos['resultado'] || '—' }}</td>
             <td class="py-1.5">{{ item.trabajos.join(', ') || '—' }}</td>
           </tr>
         }
