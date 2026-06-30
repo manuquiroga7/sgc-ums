@@ -270,14 +270,14 @@
     border-left: 3px solid #C8561A;
     border-radius: 0 3px 3px 0;
     padding: 8px 12px;
-    font-size: 7.5pt;
+    font-size: 9.5pt;
     color: #6b3a10;
-    line-height: 1.5;
+    line-height: 1.6;
   }
   .nota-luces strong {
     color: #C8561A;
     display: block;
-    font-size: 6.5pt;
+    font-size: 8pt;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 3px;
@@ -371,14 +371,14 @@
     ->filter(fn($f) => ($f['type'] ?? '') !== 'producto_ref')
     ->values();
 
-  // Nota de luces: solo si algún ítem tiene aislado_termico o autoflotante en falso/no
+  // Nota de luces: solo si algún ítem tiene venc_luz antes de fecha_proximo_servicio
   $notaLuces = collect($pl['notas'] ?? [])->firstWhere('key', 'nota_luces');
-  $notaLucesActiva = $notaLuces && $certificado->items->contains(function ($item) {
-      $extra = (array) ($item->campos_extra ?? []);
-      $aisladoVal = $extra['aislado_termico'] ?? $item->aislado_termico ?? null;
-      $flotanteVal = $extra['autoflotante'] ?? $item->autoflotante ?? null;
-      return ($aisladoVal !== null && !filter_var($aisladoVal, FILTER_VALIDATE_BOOLEAN))
-          || ($flotanteVal !== null && !filter_var($flotanteVal, FILTER_VALIDATE_BOOLEAN));
+  $fechaProximoCarbon = $certificado->fecha_proximo_servicio
+      ? \Carbon\Carbon::parse($certificado->fecha_proximo_servicio) : null;
+  $notaLucesActiva = $notaLuces && $fechaProximoCarbon && $certificado->items->contains(function ($item) use ($fechaProximoCarbon) {
+      $vencLuz = $item->venc_luz ?? ((array)($item->campos_extra ?? []))['venc_luz'] ?? null;
+      if (!$vencLuz) return false;
+      try { return \Carbon\Carbon::parse($vencLuz)->lt($fechaProximoCarbon); } catch (\Exception $e) { return false; }
   });
   $notaLucesTexto = $notaLucesActiva ? $t($notaLuces['texto'] ?? '') : '';
 
@@ -424,7 +424,7 @@
         <div class="ph-divider"><div class="ph-divider-inner"></div></div>
         <div class="ph-title">
           <div class="ph-title-sub">{{ $lang === 'es' ? 'Certificado de Inspección' : 'Inspection Certificate' }}</div>
-          <div class="ph-title-main">{{ $tituloEs }}</div>
+          <div class="ph-title-main">{{ $lang === 'es' ? $tituloEs : ($tituloEn ?: $tituloEs) }}</div>
         </div>
         <div class="ph-divider"><div class="ph-divider-inner"></div></div>
         <div class="ph-right">
@@ -592,8 +592,8 @@
       </div>
       <div class="datos-row">
         <div class="datos-field full" style="border-top:1px solid #dde5ed;" colspan="4">
-          <div class="field-label">{{ $lang === 'es' ? 'Recomendaciones / Recommendations' : 'Recommendations / Recomendaciones' }}</div>
-          <div class="field-value" style="font-weight:normal;font-size:8pt;margin-top:2px;">{{ $certificado->recomendaciones ?? 'NIL' }}</div>
+          <div class="field-label">{{ $lang === 'es' ? 'Recomendaciones' : 'Recommendations' }}</div>
+          <div class="field-value" style="font-weight:normal;font-size:8pt;margin-top:2px;">{{ $recomendaciones ?? 'NIL' }}</div>
         </div>
       </div>
     </div>
@@ -620,7 +620,7 @@
   {{-- COMUNICADO DE CERTIFICACIÓN (no aplica a Traje de Inmersión) --}}
   @if ($tipo->prefijo === 'CH')
   <div style="padding-top: 18px;">
-    <div class="section-header"><div class="section-label">{{ $lang === 'es' ? 'Autorización' : 'Authorization' }}</div></div>
+    <div class="section-header"><div class="section-label">{{ $lang === 'es' ? 'Declaración de conformidad' : 'Compliance statement' }}</div></div>
     <div style="margin: 6px 0 0; padding: 10px 14px; background: #f7fafd; border: 1px solid #dde5ed; border-radius: 4px; font-size: 10pt; font-weight: bold; color: #3a4a5a; line-height: 1.6;">
       {{ $lang === 'es'
         ? 'Por la presente se certifica que el equipo anteriormente mencionado ha sido inspeccionado y probado de acuerdo con las instrucciones del fabricante y los requisitos del Convenio SOLAS, Capítulo II-2, Regla 10, y del Código Internacional de Sistemas de Seguridad contra Incendios (FSS Code), adoptado mediante la Resolución MSC.98(73) de la OMI. Como resultado de dicha inspección y prueba, se constató que el equipo se encuentra en condiciones satisfactorias y apto para el servicio previsto.'

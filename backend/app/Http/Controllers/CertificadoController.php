@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class CertificadoController extends Controller
 {
@@ -191,9 +192,25 @@ class CertificadoController extends Controller
             ? $certificado->tipo->plantilla
             : json_decode($certificado->tipo->plantilla, true) ?? [];
 
+        $recomendaciones = $certificado->recomendaciones;
+        if ($certificado->idioma === 'en' && $recomendaciones) {
+            try {
+                $translator = new GoogleTranslate('en');
+                $translator->setSource('es');
+                $translator->setOptions(['verify' => false]);
+                $translated = $translator->translate($recomendaciones);
+                if ($translated) {
+                    $recomendaciones = $translated;
+                }
+            } catch (\Exception $e) {
+                // Si falla la traducción, usar el texto original
+            }
+        }
+
         $pdf = Pdf::loadView('pdf.certificado', [
-            'certificado' => $certificado,
-            'plantilla'   => $plantilla,
+            'certificado'     => $certificado,
+            'plantilla'       => $plantilla,
+            'recomendaciones' => $recomendaciones,
         ])->setPaper('a4', 'portrait');
 
         $dompdf = $pdf->getDomPDF();
